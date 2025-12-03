@@ -1,6 +1,7 @@
 # WebMOOC 餐厅游戏
 
-** 难度 ** :star::star::star: 需要具备基础知识
+**难度等级** :star::star::star:
+需要具备基础知识
 
 ## 练习介绍
 
