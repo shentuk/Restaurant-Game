@@ -1,0 +1,122 @@
+.game-container {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* 头部 */
+.header {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 头部公共样式 */
+.header .common {
+    height: 100%;
+    border: 6px solid rgba(107, 105, 0);
+    background-image: linear-gradient(yellow 50%, rgb(226, 201, 11) 50%);
+    border-radius: 25px;
+    color: rgba(107, 105, 0);
+    display: flex;
+    align-items: center;
+}
+
+/* 时间区域 */
+.time-display {
+    justify-content: space-evenly;
+    width: 30%;
+}
+
+/* 金钱区域 */
+.money-display {
+    justify-content: flex-end;
+    width: 60%;
+    padding-right: 20px;
+}
+
+/* 主体内容 */
+.main-content {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 厨师区域 */
+.chef-section {
+    display: grid;
+    grid-template-rows: repeat(2, 50%);
+    grid-template-columns: repeat(3, 33.333333%);
+    justify-items: center;
+    padding-top: 18px;
+    border-radius: 15px;
+    border: 5px solid #fff;
+    background-color: rgb(226, 201, 11);
+}
+
+/* 厨师项 */
+.chef {
+    margin-bottom: 18px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+}
+
+/* 用餐区域 */
+.table-section {
+    height: 200px;
+    background-color: red;
+}
+
+/* 餐桌项 */
+.table {}
+
+/* 顾客等候区 */
+.waitingCustomer-section {
+    position: absolute;
+    opacity: 0;
+}
+
+.waitingCustomer-section.show {
+    opacity: 1;
+}
+
+/* 顾客项 */
+.customer {}
+
+/* 操作弹窗 */
+.operation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.operation-modal.active {
+    display: flex;
+}
+
+/* 消息提示 */
+.message {
+    position: absolute;
+    opacity: 0;
+}
+
+.message.show {
+    opacity: 1;
+}

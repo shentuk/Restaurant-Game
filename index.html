@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/base.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <!-- 游戏主界面 -->
+    <div class="game-container">
+
+        <!-- 头部 -->
+        <header class="header">
+            <!-- 时间区域 -->
+            <div class="time-display common">
+                <span class="time-week">W1</span>
+                <span class="time-day">D1</span>
+            </div>
+            <!-- 金钱区域 -->
+            <div class="money-display common">
+                <span class="money">500</span>
+            </div>
+        </header>
+
+        <!-- 主体 -->
+        <main class="main-content">
+            <!-- 厨师区域 -->
+            <section class="chef-section">
+                <div class="chef"></div>
+            </section>
+            <!-- 用餐区域 -->
+            <section class="table-section">
+                <div class="table"></div>
+            </section>
+            <!-- 顾客等候区 -->
+            <section class="waitingCustomer-section">
+                <div class="customer"></div>
+            </section>
+        </main>
+
+        <!-- 操作台 -->
+        <div class="operation-modal">
+            <!-- 游戏操作弹窗 -->
+            <div class="game-start">
+                <h2>WebMOOC餐厅开业啦！</h2>
+                <p>WebMOOC餐厅即将开业，请认真经营你的餐厅吧</p>
+                <p>经营餐厅需要做好下面几件事情！加油！</p>
+                <p class="game-intro">
+                    <span>招聘厨师</span>
+                    <span>迎接客人</span>
+                    <span>烹饪美食</span>
+                </p>
+                <button id="startGameBtn">开始经营吧</button>
+            </div>
+            <!-- 点餐区域 -->
+            <div class="order-dish">
+                <div class="order"></div>
+            </div>
+        </div>
+
+        <!-- 消息提示 -->
+        <div class="message"></div>
+    </div>
+</body>
+
+</html>

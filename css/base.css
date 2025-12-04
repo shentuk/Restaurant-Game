@@ -1,0 +1,19 @@
+* {
+    /* 全局样式:移动端视口的常用设置 */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* 取消点击时边框和蓝底 */
+    outline: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    height: 100vh;
+    background: url(../images/dose-juice-sTPy-oeA3h0-unsplash.jpg) no-repeat center center;
+    background-size: 100% 100%;
+}
+
+img {
+    vertical-align: middle;
+}
