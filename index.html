@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>restaurant game</title>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/index.css">
 </head>
@@ -16,12 +16,12 @@
         <!-- 头部 -->
         <header class="header">
             <!-- 时间区域 -->
-            <div class="time-display common">
+            <div class="time-display">
                 <span class="time-week">W1</span>
                 <span class="time-day">D1</span>
             </div>
             <!-- 金钱区域 -->
-            <div class="money-display common">
+            <div class="money-display">
                 <span class="money">500</span>
             </div>
         </header>
@@ -30,21 +30,34 @@
         <main class="main-content">
             <!-- 厨师区域 -->
             <section class="chef-section">
-                <div class="chef"></div>
+                <div class="chef humanHead free">
+                    <img src="./images/iconfinder_Chef-2_379358.png" alt="">
+                </div>
+                <!-- 招聘厨师按钮 -->
+                <div class="hireChefBtn humanHead">
+                    <img src="./images/iconfinder_Chef-2_379358.png" alt="">
+                </div>
             </section>
             <!-- 用餐区域 -->
             <section class="table-section">
-                <div class="table"></div>
+                <div class="table humanHead free">
+                    <img src="./images/379444-512.png" alt="">
+                </div>
+                <div class="table humanHead free"></div>
+                <div class="table humanHead free"></div>
+                <div class="table humanHead free"></div>
             </section>
             <!-- 顾客等候区 -->
             <section class="waitingCustomer-section">
-                <div class="customer"></div>
+                <div class="customer humanHead cusWaitorOrder">
+                    <img src="./images/379339-512.png" alt="">
+                </div>
             </section>
         </main>
 
         <!-- 操作台 -->
         <div class="operation-modal">
-            <!-- 游戏操作弹窗 -->
+            <!-- 游戏开始弹窗 -->
             <div class="game-start">
                 <h2>WebMOOC餐厅开业啦！</h2>
                 <p>WebMOOC餐厅即将开业，请认真经营你的餐厅吧</p>
@@ -56,10 +69,14 @@
                 </p>
                 <button id="startGameBtn">开始经营吧</button>
             </div>
-            <!-- 点餐区域 -->
+            <!-- 顾客点餐菜单 -->
             <div class="order-dish">
                 <div class="order"></div>
             </div>
+            <!-- 招聘厨师 -->
+            <div class="hire-chef"></div>
+            <!-- 解雇厨师 -->
+            <div class="fire-chef"></div>
         </div>
 
         <!-- 消息提示 -->

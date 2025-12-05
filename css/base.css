@@ -15,5 +15,32 @@ body {
 }
 
 img {
-    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 人头像，餐桌像 */
+.humanHead {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+}
+
+/* 背景底色 */
+/*
+ * 状态：空闲
+ * 角色：厨师、顾客、餐桌
+*/
+.free {
+    background-image: linear-gradient(to right, #dddddd 50%, #aaaaaa 50%);
+}
+
+/*
+ * 状态：等待入座/入座点餐
+ * 角色：顾客
+*/
+.cusWaitorOrder {
+    background-image: linear-gradient(to right, #7591c5 50%, #2166c0 50%);
 }
