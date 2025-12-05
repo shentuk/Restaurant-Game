@@ -288,14 +288,34 @@
     padding-left: 8px;
 }
 
-/* .order-menu dl dd */
-
 /* 操作弹窗 */
 
 /* 消息提示 */
 .message {
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    padding: 10px 15px;
+    border: 6px solid #fff;
+    border-radius: 15px;
+    color: rgb(146, 124, 10);
+    z-index: 9999;
     opacity: 0;
+}
+
+.message.fail {
+    background-color: pink;
+}
+
+.message.success {
+    background-color: rgb(204, 222, 45);
+}
+
+.message p {
+    font-size: 12px;
+    text-align: center;
 }
 
 .message.show {
