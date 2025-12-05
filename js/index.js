@@ -58,3 +58,18 @@ const Game = {
     },
 }
 
+// 初始化游戏
+function initGame() {
+    // 默认有一个厨师
+    // 弹出游戏开始弹窗
+}
+
+// 点击“开始经营吧”
+function startGame() {
+    // 隐藏游戏开始弹窗
+    // 时间开始计时
+    // 顾客随机进入餐馆
+}
+
+// 初始化游戏
+// document.addEventListener('DOMContentLoaded', initGame);

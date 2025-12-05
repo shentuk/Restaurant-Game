@@ -22,10 +22,10 @@
     display: flex;
     align-items: center;
     height: 100%;
-    border: 6px solid rgba(107, 105, 0);
+    border: 6px solid rgb(111, 94, 8);
     background-image: linear-gradient(yellow 50%, rgb(226, 201, 11) 50%);
     border-radius: 20px;
-    color: rgba(107, 105, 0);
+    color: rgb(111, 94, 8);
 }
 
 /* 时间区域 */
@@ -40,6 +40,8 @@
     width: 55%;
     padding-right: 20px;
 }
+
+/* 头部 */
 
 /* 主体内容 */
 .main-content {
@@ -82,7 +84,7 @@
     filter: drop-shadow(60px 0 0px white);
 }
 
-/* 招聘厨师按钮加号 */
+/* 招聘厨师按钮+号 */
 .hireChefBtn::after {
     content: '+';
     position: absolute;
@@ -91,6 +93,10 @@
     transform: translate(-50%, -50%);
     color: rgba(161, 128, 21, 0.8);
     font-size: 50px;
+}
+
+.hireChefBtn.hide {
+    display: none;
 }
 
 /* 用餐区域 */
@@ -116,8 +122,10 @@
 
 /* 顾客等候区 */
 .waitingCustomer-section {
+    display: flex;
+    flex-direction: row-reverse;
     position: absolute;
-    bottom: -40px;
+    bottom: -45px;
     right: 0;
     opacity: 1;
 }
@@ -127,7 +135,31 @@
 }
 
 /* 顾客项 */
-.customer {}
+.customer:nth-child(1) {
+    transform: translateX(0);
+}
+
+.customer:nth-child(2) {
+    transform: translateX(22px);
+}
+
+.customer:nth-child(3) {
+    transform: translateX(44px);
+}
+
+.customer:nth-child(4) {
+    transform: translateX(66px);
+}
+
+.customer:nth-child(5) {
+    transform: translateX(88px);
+}
+
+.customer:nth-child(6) {
+    transform: translateX(110px);
+}
+
+/* 主体内容 */
 
 /* 操作弹窗 */
 .operation-modal {
@@ -136,6 +168,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    padding: 0 10px;
     background-color: rgba(0, 0, 0, 0.5);
     display: none;
     align-items: center;
@@ -147,6 +180,118 @@
     display: flex;
 }
 
+/* 操作弹窗公共样式 */
+.modalCommon {
+    width: 100%;
+    padding: 15px;
+    border: 6px solid #fff;
+    border-radius: 15px;
+    background-color: rgb(226, 201, 11);
+    display: none;
+}
+
+.modalCommon.show {
+    display: block;
+}
+
+.modalCommon h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.modalCommon p {
+    font-size: 14px;
+    color: rgba(107, 105, 0);
+    line-height: 20px;
+}
+
+.modalCommon button {
+    height: 40px;
+    border: 2px solid rgb(111, 94, 8);
+    background-image: linear-gradient(yellow 50%, rgb(226, 201, 11) 50%);
+    border-radius: 20px;
+    color: rgb(111, 94, 8);
+}
+
+.modalCommon .operation-btn {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.operation-btn .sureBtn {
+    width: 60%;
+}
+
+.operation-btn .sureBtn:disabled {
+    background-image: linear-gradient(#bbbab2d6 50%, #989696b7 50%);
+    color: rgba(161, 128, 21, 0.8);
+}
+
+.operation-btn .cancelBtn {
+    width: 35%;
+}
+
+/* 游戏开始弹窗 */
+.game-start p.game-intro {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.game-start .startGameBtn {
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 顾客点餐菜单 */
+.order-dish {
+    position: relative;
+}
+
+.order-customer {
+    position: absolute;
+    top: -35px;
+    left: 15px;
+}
+
+.order-info {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.order-menu {
+    width: 100%;
+    padding: 20px;
+    padding-bottom: 40px;
+    border: 2px solid rgb(160, 139, 35);
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(111, 94, 8);
+}
+
+.order-menu dl {
+    margin-bottom: 10px;
+}
+
+.order-menu dl dt {
+    margin-bottom: 10px;
+}
+
+.order-menu dl dd {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    padding-left: 8px;
+}
+
+/* .order-menu dl dd */
+
+/* 操作弹窗 */
+
 /* 消息提示 */
 .message {
     position: absolute;
@@ -156,3 +301,5 @@
 .message.show {
     opacity: 1;
 }
+
+/* 消息提示 */

@@ -7,6 +7,7 @@
     <title>restaurant game</title>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/renderInJs.css">
 </head>
 
 <body>
@@ -28,8 +29,10 @@
 
         <!-- 主体 -->
         <main class="main-content">
+
             <!-- 厨师区域 -->
             <section class="chef-section">
+                <!-- 厨师通过JS动态生成，insertBefore方法动态插入 -->
                 <div class="chef humanHead free">
                     <img src="./images/iconfinder_Chef-2_379358.png" alt="">
                 </div>
@@ -38,45 +41,195 @@
                     <img src="./images/iconfinder_Chef-2_379358.png" alt="">
                 </div>
             </section>
+
             <!-- 用餐区域 -->
             <section class="table-section">
                 <div class="table humanHead free">
+                    <!-- 用餐顾客将通过JS动态生成 -->
                     <img src="./images/379444-512.png" alt="">
                 </div>
                 <div class="table humanHead free"></div>
                 <div class="table humanHead free"></div>
                 <div class="table humanHead free"></div>
             </section>
+
             <!-- 顾客等候区 -->
             <section class="waitingCustomer-section">
+                <!-- 等候顾客将通过JS动态生成，后插入的元素始终为第一个孩子，
+                因此顾客等待的顺序与插入的顺序相反 -->
                 <div class="customer humanHead cusWaitorOrder">
-                    <img src="./images/379339-512.png" alt="">
+                    <img src="./images/379444-512.png" alt="">
                 </div>
             </section>
         </main>
 
         <!-- 操作台 -->
         <div class="operation-modal">
+
             <!-- 游戏开始弹窗 -->
-            <div class="game-start">
+            <div class="game-start modalCommon">
                 <h2>WebMOOC餐厅开业啦！</h2>
-                <p>WebMOOC餐厅即将开业，请认真经营你的餐厅吧</p>
-                <p>经营餐厅需要做好下面几件事情！加油！</p>
+                <p>
+                    WebMOOC餐厅即将开业，请认真经营你的餐厅吧<br>
+                    经营餐厅需要做好下面几件事情！加油！
+                </p>
                 <p class="game-intro">
                     <span>招聘厨师</span>
                     <span>迎接客人</span>
                     <span>烹饪美食</span>
                 </p>
-                <button id="startGameBtn">开始经营吧</button>
+                <button class="startGameBtn">开始经营吧</button>
             </div>
-            <!-- 顾客点餐菜单 -->
-            <div class="order-dish">
-                <div class="order"></div>
-            </div>
+
             <!-- 招聘厨师 -->
-            <div class="hire-chef"></div>
+            <div class="hire-chef modalCommon">
+                <h2>招聘新厨师</h2>
+                <p>
+                    招聘一名新厨师可以帮你更快地为顾客烹饪菜肴,<br>
+                    增加餐厅收入。你最多可以拥有六名厨师。<br>
+                    但每个厨师每周需要你支付工资 ￥ 140<br>
+                    请问你确认新招聘一名厨师吗?
+                </p>
+                <div class="operation-btn">
+                    <button id="sureHireChefBtn" class="sureBtn">是的，确认招聘</button>
+                    <button id="cancelHireChefBtn" class="cancelBtn">先不了</button>
+                </div>
+            </div>
+
             <!-- 解雇厨师 -->
-            <div class="fire-chef"></div>
+            <div class="fire-chef modalCommon">
+                <h2>解雇厨师</h2>
+                <p>
+                    解雇当前闲置的厨师可以帮你节省成本。<br>
+                    解雇时会按厨师本周已经工作的日子结算工资，并会赔偿一周工资作为解约金。<br>
+                    解雇当前厨师结算工资及解约金需要付出
+                    <span class="fireChefCost">￥ 140</span>
+                </p>
+                <div class="operation-btn">
+                    <button id="sureFireChefBtn" class="sureBtn">是的，确认解雇</button>
+                    <button id="cancelFireChefBtn" class="cancelBtn">先不了</button>
+                </div>
+            </div>
+
+            <!-- 顾客点餐菜单 -->
+            <div class="order-dish modalCommon">
+                <!-- 菜单将通过JS动态生成 -->
+                <!-- 头像 -->
+                <div class="order-customer humanHead cusWaitorOrder">
+                    <img src="./images/379444-512.png" alt="">
+                </div>
+                <!-- 点菜信息 -->
+                <div class="order-info">
+                    <span id="orderCustomerName">QIAN</span> 正在点菜，已点 <span id="orderTotalPrice">0</span> 元的菜
+                </div>
+                <!-- 点菜菜单 -->
+                <div class="order-menu">
+                    <dl>
+                        <dt>凉菜（二选一，可不点）</dt>
+                        <dd>
+                            <label>
+                                <input type="radio" name="liangcai" value="凉拌SAN" data-price="6">
+                                凉拌SAN
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥&nbsp;&nbsp;6</span>
+                            </div>
+                        </dd>
+                        <dd>
+                            <label>
+                                <input type="radio" name="liangcai" value="冷切DOM" data-price="4">
+                                冷切DOM
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥&nbsp;&nbsp;4</span>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>主菜（五选一，必点）</dt>
+                        <dd>
+                            <label>
+                                <input type="radio" name="zhucai" value="UL炖LI" data-price="12">
+                                UL炖LI
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥12</span>
+                            </div>
+                        </dd>
+                        <dd>
+                            <label>
+                                <input type="radio" name="zhucai" value="红烧HEAD" data-price="15">
+                                红烧HEAD
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥15</span>
+                            </div>
+                        </dd>
+                        <dd>
+                            <label>
+                                <input type="radio" name="zhucai" value="酥炸ECharts" data-price="18">
+                                酥炸ECharts
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥18</span>
+                            </div>
+                        </dd>
+                        <dd>
+                            <label>
+                                <input type="radio" name="zhucai" value="炙烤CSS" data-price="16">
+                                炙烤CSS
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥16</span>
+                            </div>
+                        </dd>
+                        <dd>
+                            <label>
+                                <input type="radio" name="zhucai" value="清蒸DIV" data-price="12">
+                                清蒸DIV
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥12</span>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>饮料（二选一，可不点）</dt>
+                        <dd>
+                            <label>
+                                <input type="radio" name="yinpin" value="鲜榨flex" data-price="5">
+                                鲜榨flex
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥&nbsp;&nbsp;5</span>
+                            </div>
+                        </dd>
+                        <dd>
+                            <label>
+                                <input type="radio" name="yinpin" value="小程序奶茶" data-price="6">
+                                小程序奶茶
+                            </label>
+                            <div>
+                                <span>······</span>
+                                <span>￥&nbsp;&nbsp;6</span>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                <!-- 操作按钮 -->
+                <div class="operation-btn">
+                    <button id="sureOrderBtn" class="sureBtn" disabled>点好了，快点上菜</button>
+                    <button id="cancelOrderBtn" class="cancelBtn">不吃了</button>
+                </div>
+            </div>
         </div>
 
         <!-- 消息提示 -->
