@@ -7,7 +7,6 @@
     <title>restaurant game</title>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/index.css">
-    <link rel="stylesheet" href="./css/renderInJs.css">
 </head>
 
 <body>
@@ -18,12 +17,12 @@
         <header class="header">
             <!-- 时间区域 -->
             <div class="time-display">
-                <span class="time-week">W1</span>
-                <span class="time-day">D1</span>
+                <span id="time-week" class="time-week">W1</span>
+                <span id="time-day" class="time-day">D1</span>
             </div>
             <!-- 金钱区域 -->
             <div class="money-display">
-                <span class="money">500</span>
+                <span id="money" class="money">500</span>
             </div>
         </header>
 
@@ -34,11 +33,11 @@
             <section class="chef-section">
                 <!-- 厨师通过JS动态生成，insertBefore方法动态插入 -->
                 <div class="chef humanHead free">
-                    <img src="./images/iconfinder_Chef-2_379358.png" alt="">
+                    <img src="./images/chef.png" alt="">
                 </div>
                 <!-- 招聘厨师按钮 -->
                 <div class="hireChefBtn humanHead">
-                    <img src="./images/iconfinder_Chef-2_379358.png" alt="">
+                    <img src="./images/chef.png" alt="">
                 </div>
             </section>
 
@@ -46,7 +45,7 @@
             <section class="table-section">
                 <div class="table humanHead free">
                     <!-- 用餐顾客将通过JS动态生成 -->
-                    <img src="./images/379444-512.png" alt="">
+                    <img src="./images/Zhao.png" alt="">
                 </div>
                 <div class="table humanHead free"></div>
                 <div class="table humanHead free"></div>
@@ -58,7 +57,7 @@
                 <!-- 等候顾客将通过JS动态生成，后插入的元素始终为第一个孩子，
                 因此顾客等待的顺序与插入的顺序相反 -->
                 <div class="customer humanHead cusWaitorOrder">
-                    <img src="./images/379444-512.png" alt="">
+                    <img src="./images/Zhao.png" alt="">
                 </div>
             </section>
         </main>
@@ -116,7 +115,7 @@
                 <!-- 菜单将通过JS动态生成 -->
                 <!-- 头像 -->
                 <div class="order-customer humanHead cusWaitorOrder">
-                    <img src="./images/379444-512.png" alt="">
+                    <img src="./images/Zhao.png" alt="">
                 </div>
                 <!-- 点菜信息 -->
                 <div class="order-info">
@@ -233,7 +232,7 @@
         </div>
 
         <!-- 消息提示 -->
-        <div class="message show fail">
+        <div class="message">
             <!-- 提示信息将通过JS动态生成 -->
             <p>
                 餐厅目前有空位，赶紧点击等位客人头像<br>

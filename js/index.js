@@ -36,6 +36,7 @@ const Game = {
     },
     // 厨师配置
     chefs: {
+        list: [],       // 当前厨师队列
         maxChefs: 6,    // 最大厨师数
         minChefs: 1,    // 最小厨师数
         num: 1,         // 当前厨师数，默认必须有一个厨师
@@ -58,6 +59,24 @@ const Game = {
     },
 }
 
+// DOM元素
+const ELEMENTS = {
+    timeWeek: document.getElementById('time-week'),
+    timeDay: document.getElementById('time-day'),
+    moneyDisplay: document.getElementById('money'),
+};
+
+// 更新时间显示
+function updateTimeDisplay() {
+    ELEMENTS.timeWeek.textContent = `W${Game.time.week}`;
+    ELEMENTS.timeDay.textContent = `D${Game.time.day}`;
+}
+
+// 更新金钱显示
+function updateMoneyDisplay() {
+    ELEMENTS.moneyDisplay.textContent = Game.money;
+}
+
 // 初始化游戏
 function initGame() {
     // 默认有一个厨师
@@ -69,6 +88,58 @@ function startGame() {
     // 隐藏游戏开始弹窗
     // 时间开始计时
     // 顾客随机进入餐馆
+}
+
+// 更新游戏时间
+function updateGameTime() {
+    // 每秒钟更新一次时间
+    Game.time.seconds++;
+
+    // 检查是否需要进入下一天
+    if (Game.time.seconds >= Game.time.daySeconds) {
+        Game.time.seconds = 0;
+        Game.time.day++;
+
+        // 更新厨师工作天数
+        Game.chefs.list.forEach(chef => {
+            chef.daysWorked++;
+        });
+
+        // 检查是否需要进入下一周
+        if (Game.time.day > 7) {
+            Game.time.day = 1;
+            Game.time.week++;
+
+            // 每一周后支付厨师工资
+            payChefSalaries();
+
+            // 厨师工作天数重置为0
+            Game.chefs.list.forEach(chef => {
+                chef.daysWorked = 0;
+            });
+        }
+
+        // 更新时间显示
+        updateTimeDisplay();
+    }
+}
+
+// 更新游戏金钱
+function updateGameMoney(rev) {
+    Game.money += rev;
+    // 更新金钱显示
+    updateMoneyDisplay();
+}
+
+// 支付厨师工资
+function payChefSalaries() {
+    const totalSalary = Game.chefs.list.reduce((total, chef) => {
+        // 计算每个厨师的工资，按工作天数和每周工资计算
+        const chefSalary = Math.ceil(chef.daysWorked / 7 * Game.chefs.chefWeeklySalary);
+        return total + chefSalary;
+    }, 0);
+    // 更新游戏金钱
+    updateGameMoney(-totalSalary);
 }
 
 // 初始化游戏
