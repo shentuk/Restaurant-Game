@@ -302,7 +302,7 @@
     border-radius: 15px;
     color: rgb(146, 124, 10);
     z-index: 9999;
-    opacity: 0;
+    display: none;
 }
 
 .message.fail {
@@ -319,7 +319,7 @@
 }
 
 .message.show {
-    opacity: 1;
+    display: block;
 }
 
 /* 消息提示 */

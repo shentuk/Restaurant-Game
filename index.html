@@ -63,7 +63,7 @@
         </main>
 
         <!-- 操作台 -->
-        <div class="operation-modal">
+        <div class="operation-modal active">
 
             <!-- 游戏开始弹窗 -->
             <div class="game-start modalCommon">
@@ -111,117 +111,18 @@
             </div>
 
             <!-- 顾客点餐菜单 -->
-            <div class="order-dish modalCommon">
-                <!-- 菜单将通过JS动态生成 -->
+            <div class="order-dish modalCommon show">
                 <!-- 头像 -->
                 <div class="order-customer humanHead cusWaitorOrder">
                     <img src="./images/Zhao.png" alt="">
                 </div>
                 <!-- 点菜信息 -->
                 <div class="order-info">
-                    <span id="orderCustomerName">QIAN</span> 正在点菜，已点 <span id="orderTotalPrice">0</span> 元的菜
+                    <span id="orderCustomerName">QIAN</span> 正在点菜，已点 <span id="checkedDishsTotalPrice">0</span> 元的菜
                 </div>
                 <!-- 点菜菜单 -->
-                <div class="order-menu">
-                    <dl>
-                        <dt>凉菜（二选一，可不点）</dt>
-                        <dd>
-                            <label>
-                                <input type="radio" name="liangcai" value="凉拌SAN" data-price="6">
-                                凉拌SAN
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥&nbsp;&nbsp;6</span>
-                            </div>
-                        </dd>
-                        <dd>
-                            <label>
-                                <input type="radio" name="liangcai" value="冷切DOM" data-price="4">
-                                冷切DOM
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥&nbsp;&nbsp;4</span>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>主菜（五选一，必点）</dt>
-                        <dd>
-                            <label>
-                                <input type="radio" name="zhucai" value="UL炖LI" data-price="12">
-                                UL炖LI
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥12</span>
-                            </div>
-                        </dd>
-                        <dd>
-                            <label>
-                                <input type="radio" name="zhucai" value="红烧HEAD" data-price="15">
-                                红烧HEAD
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥15</span>
-                            </div>
-                        </dd>
-                        <dd>
-                            <label>
-                                <input type="radio" name="zhucai" value="酥炸ECharts" data-price="18">
-                                酥炸ECharts
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥18</span>
-                            </div>
-                        </dd>
-                        <dd>
-                            <label>
-                                <input type="radio" name="zhucai" value="炙烤CSS" data-price="16">
-                                炙烤CSS
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥16</span>
-                            </div>
-                        </dd>
-                        <dd>
-                            <label>
-                                <input type="radio" name="zhucai" value="清蒸DIV" data-price="12">
-                                清蒸DIV
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥12</span>
-                            </div>
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>饮料（二选一，可不点）</dt>
-                        <dd>
-                            <label>
-                                <input type="radio" name="yinpin" value="鲜榨flex" data-price="5">
-                                鲜榨flex
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥&nbsp;&nbsp;5</span>
-                            </div>
-                        </dd>
-                        <dd>
-                            <label>
-                                <input type="radio" name="yinpin" value="小程序奶茶" data-price="6">
-                                小程序奶茶
-                            </label>
-                            <div>
-                                <span>······</span>
-                                <span>￥&nbsp;&nbsp;6</span>
-                            </div>
-                        </dd>
-                    </dl>
+                <div class="order-menu" id="order-menu">
+                    <!-- 菜单将通过JS动态生成 -->
                 </div>
                 <!-- 操作按钮 -->
                 <div class="operation-btn">
@@ -240,6 +141,9 @@
             </p>
         </div>
     </div>
+
+    <!-- 游戏主逻辑 -->
+    <script src="./js/index.js" type="module"></script>
 </body>
 
 </html>

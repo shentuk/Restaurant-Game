@@ -13,8 +13,10 @@ const customers = [
 ];
 
 class Customer {
-    constructor() {
-
+    constructor(name, head, status) {
+        this.name = name; // 姓名
+        this.head = head; // 头像
+        this.status = status; // 状态
     }
 }
 

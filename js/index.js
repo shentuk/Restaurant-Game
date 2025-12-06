@@ -2,70 +2,12 @@
  * 主函数入口
  */
 
-// import Restaurant from './restaurant.js';
-// import Chef from './chef.js';
-// import Customer from './customer.js';
-// import ProgressBar from './progressbar.js';
-
 // 游戏全局配置
-const Game = {
-    // 时间配置
-    time: {
-        timer: null,       // 时间器
-        week: 1,           // 周数，从第1周开始
-        day: 1,            // 天数，从第1天开始
-        seconds: 0,        // 秒数
-        daySeconds: 240,   // 每天秒数
-    },
-    // 金钱配置
-    money: 500,         // 初始金钱500
-    // 菜单配置
-    dishMenu: {
-        list: [         // 菜品菜单
-            { type: '凉菜', name: '凉菜SAN', cost: 3, price: 6, cookingTime: 4, waitingTime: 10, eatingTime: 6 },
-            { type: '凉菜', name: '冷切DOM', cost: 2, price: 4, cookingTime: 4, waitingTime: 10, eatingTime: 6 },
-            { type: '主菜', name: 'UL炖LI', cost: 5, price: 12, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-            { type: '主菜', name: '红烧HEAD', cost: 6, price: 15, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-            { type: '主菜', name: '酥炸ECharts', cost: 7, price: 18, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-            { type: '主菜', name: '炙烤CSS', cost: 6, price: 16, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-            { type: '主菜', name: '清蒸DIV', cost: 4, price: 12, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-            { type: '饮品', name: '鲜榨flex', cost: 2, price: 5, cookingTime: 4, waitingTime: 10, eatingTime: 4 },
-            { type: '饮品', name: '小程序奶茶', cost: 2, price: 6, cookingTime: 4, waitingTime: 10, eatingTime: 4 },
-        ],
-        todo: [],       // 待做菜单
-    },
-    // 厨师配置
-    chefs: {
-        list: [],       // 当前厨师队列
-        maxChefs: 6,    // 最大厨师数
-        minChefs: 1,    // 最小厨师数
-        num: 1,         // 当前厨师数，默认必须有一个厨师
-        chefWeeklySalary: 140, // 每周厨师工资140元
-    },
-    // 顾客配置
-    customers: {
-        maxWaitingCustomers: 6, // 最大等待顾客数
-        waitingCustomers: [],   // 等待顾客队列
-    },
-    // 餐桌配置
-    tables: {
-        emptyNum: 4,    // 空桌数
-        list: [
-            { id: 1, status: 'empty', customer: null, food: [] },
-            { id: 2, status: 'empty', customer: null, food: [] },
-            { id: 3, status: 'empty', customer: null, food: [] },
-            { id: 4, status: 'empty', customer: null, food: [] }
-        ],
-    },
-}
-
+import Game from './configs.js';
 // DOM元素
-const ELEMENTS = {
-    timeWeek: document.getElementById('time-week'),
-    timeDay: document.getElementById('time-day'),
-    moneyDisplay: document.getElementById('money'),
-};
+import ELEMENTS from './doms.js';
 
+/* 更新显示 */
 // 更新时间显示
 function updateTimeDisplay() {
     ELEMENTS.timeWeek.textContent = `W${Game.time.week}`;
@@ -77,10 +19,97 @@ function updateMoneyDisplay() {
     ELEMENTS.moneyDisplay.textContent = Game.money;
 }
 
+// 更新已选中的菜品总金额显示
+function updateCheckedDishsTotalPriceDisplay(price) {
+    ELEMENTS.checkedDishsTotalPrice.textContent = price;
+}
+
+// 更新确认点菜按钮显示
+function updateSureOrderBtnDisplay(curCheckedDishsType) {
+    // 统计每种菜品类型的数量
+    const zhucaiCount = curCheckedDishsType.filter(dish => dish === 'zhucai').length;
+    const liangcaiCount = curCheckedDishsType.filter(dish => dish === 'liangcai').length;
+    const drinkCount = curCheckedDishsType.filter(dish => dish === 'drink').length;
+
+    const isValid = (
+        zhucaiCount === 1 &&  // zhucai必有且只能有一个
+        liangcaiCount <= 1 && // liangcai最多一个
+        drinkCount <= 1       // drink最多一个
+    );
+
+    ELEMENTS.sureOrderBtn.disabled = !isValid;
+}
+
+// 渲染菜单
+function renderDishMenu() {
+    Game.dishMenu.menuType.forEach(typeItem => {
+        const menuTypeContainer = document.createElement('dl');
+        menuTypeContainer.innerHTML = `
+            <dt>${typeItem.title}</dt>
+        `;
+
+        typeItem.list.forEach(dish => {
+            const menuItem = document.createElement('dd');
+            menuItem.innerHTML = `
+                <label>
+                    <input type="checkbox" name="${typeItem.type}" value="${dish.name}"">
+                    ${dish.name}
+                </label>
+                <div>
+                    <span>······</span>
+                    <span>￥${dish.price < 10 ? '&nbsp;&nbsp;' : ''}${dish.price}</span>
+                </div>
+            `;
+
+            menuItem.addEventListener('change', (e) => {
+                toggleMenuItem(e, dish);
+            });
+
+            menuTypeContainer.appendChild(menuItem);
+        });
+
+        ELEMENTS.orderMenuContainer.appendChild(menuTypeContainer);
+    });
+}
+/* 更新显示 */
+
+/* 游戏事件 */
+// 切换菜单项选择
+function toggleMenuItem(e, dish) {
+    const target = e.target;
+    if (target.checked) {
+        Game.dishMenu.curCheckedDishsType.push(target.name);
+        Game.dishMenu.curCheckedDishsTotalPrice += dish.price;
+    } else {
+        const index = Game.dishMenu.curCheckedDishsType.indexOf(target.name);
+        if (index > -1) {
+            Game.dishMenu.curCheckedDishsType.splice(index, 1);
+        }
+        Game.dishMenu.curCheckedDishsTotalPrice -= dish.price;
+    }
+
+    updateCheckedDishsTotalPriceDisplay(Game.dishMenu.curCheckedDishsTotalPrice);
+    updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishsType);
+}
+
+// 支付厨师工资
+function payChefSalaries() {
+    const totalSalary = Game.chefs.list.reduce((total, chef) => {
+        // 计算每个厨师的工资，按工作天数和每周工资计算
+        const chefSalary = Math.ceil(chef.daysWorked / 7 * Game.chefs.chefWeeklySalary);
+        return total + chefSalary;
+    }, 0);
+    // 更新游戏金钱
+    updateGameMoney(-totalSalary);
+}
+/* 游戏事件 */
+
+/* 全局事件 */
 // 初始化游戏
 function initGame() {
     // 默认有一个厨师
     // 弹出游戏开始弹窗
+    renderDishMenu();
 }
 
 // 点击“开始经营吧”
@@ -130,17 +159,7 @@ function updateGameMoney(rev) {
     // 更新金钱显示
     updateMoneyDisplay();
 }
-
-// 支付厨师工资
-function payChefSalaries() {
-    const totalSalary = Game.chefs.list.reduce((total, chef) => {
-        // 计算每个厨师的工资，按工作天数和每周工资计算
-        const chefSalary = Math.ceil(chef.daysWorked / 7 * Game.chefs.chefWeeklySalary);
-        return total + chefSalary;
-    }, 0);
-    // 更新游戏金钱
-    updateGameMoney(-totalSalary);
-}
+/* 全局事件 */
 
 // 初始化游戏
-// document.addEventListener('DOMContentLoaded', initGame);
+document.addEventListener('DOMContentLoaded', initGame);
