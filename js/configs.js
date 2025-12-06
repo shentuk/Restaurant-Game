@@ -50,11 +50,20 @@ export default {
         list: [],       // 当前厨师队列
         maxChefs: 6,    // 最大厨师数
         minChefs: 1,    // 最小厨师数
-        num: 1,         // 当前厨师数，默认必须有一个厨师
+        curChefsNum: 0,         // 当前厨师数
         chefWeeklySalary: 140, // 每周厨师工资140元
     },
     // 顾客配置
     customers: {
+        list: [
+            { name: 'Zhao', head: 'images/Zhao.png', status: 'free' },
+            { name: 'Qian', head: 'images/Qian.png', status: 'free' },
+            { name: 'Sun', head: 'images/Sun.png', status: 'free' },
+            { name: 'Li', head: 'images/Li.png', status: 'free' },
+            { name: 'Zhou', head: 'images/Zhou.png', status: 'free' },
+            { name: 'Wu', head: 'images/Wu.png', status: 'free' },
+            { name: 'Zhen', head: 'images/Zhen.png', status: 'free' }
+        ],       // 顾客队列
         maxWaitingCustomers: 6, // 最大等待顾客数
         waitingCustomers: [],   // 等待顾客队列
     },

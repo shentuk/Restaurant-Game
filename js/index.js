@@ -6,6 +6,10 @@
 import Game from './configs.js';
 // DOM元素
 import ELEMENTS from './doms.js';
+// 厨师类
+import Chef from './chef.js';
+// 顾客类
+import Customer from './customer.js';
 
 /* 更新显示 */
 // 更新时间显示
@@ -19,7 +23,7 @@ function updateMoneyDisplay() {
     ELEMENTS.moneyDisplay.textContent = Game.money;
 }
 
-// 更新已选中的菜品总金额显示
+// 更新顾客点餐时已选中的菜品总金额显示
 function updateCheckedDishsTotalPriceDisplay(price) {
     ELEMENTS.checkedDishsTotalPrice.textContent = price;
 }
@@ -38,6 +42,44 @@ function updateSureOrderBtnDisplay(curCheckedDishsType) {
     );
 
     ELEMENTS.sureOrderBtn.disabled = !isValid;
+}
+
+// 更新操作台显示
+function updateOperationModalDisplay() {
+    ELEMENTS.operationModal.classList.toggle('active');
+}
+
+// 更新游戏开始弹窗显示
+function updateGameStartModal() {
+    updateOperationModalDisplay();
+    ELEMENTS.gameStartModal.classList.toggle('show');
+}
+
+// 更新招聘新厨师操作台显示
+function updateHireChefModal() {
+    updateOperationModalDisplay();
+    ELEMENTS.hireChefModal.classList.toggle('show');
+}
+
+// 更新解雇厨师操作台显示
+function updateFireChefModal() {
+    updateOperationModalDisplay();
+    ELEMENTS.fireChefModal.classList.toggle('show');
+}
+
+// 更新点餐菜单操作台显示
+function updateOrderMenuModal() {
+    updateOperationModalDisplay();
+    ELEMENTS.orderMenuModal.classList.toggle('show');
+}
+
+// 更新招聘厨师按钮显示
+function updateHireChefBtnDisplay() {
+    if (Game.chefs.curChefsNum >= Game.chefs.maxChefs) {
+        ELEMENTS.hireChefBtn.classList.add('hide');
+    } else {
+        ELEMENTS.hireChefBtn.classList.remove('hide');
+    }
 }
 
 // 渲染菜单
@@ -71,9 +113,19 @@ function renderDishMenu() {
         ELEMENTS.orderMenuContainer.appendChild(menuTypeContainer);
     });
 }
+
+// 渲染厨师
+function renderChef() {
+    const chef = new Chef();
+    Game.chefs.list.push(chef);
+    ELEMENTS.chefSection.insertBefore(chef.dom, ELEMENTS.hireChefBtn);
+    // 更新当前厨师数
+    Game.chefs.curChefsNum++;
+    updateHireChefBtnDisplay();
+}
 /* 更新显示 */
 
-/* 游戏事件 */
+/* 工具函数 */
 // 切换菜单项选择
 function toggleMenuItem(e, dish) {
     const target = e.target;
@@ -102,21 +154,123 @@ function payChefSalaries() {
     // 更新游戏金钱
     updateGameMoney(-totalSalary);
 }
+/* 工具函数 */
+
+/* 游戏事件 */
+// 确认雇佣厨师
+function sureHireChef() {
+    renderChef();
+    updateHireChefModal();
+}
+
+// 取消雇佣厨师
+function cancelHireChef() {
+    updateHireChefModal();
+}
+
+// 确认解雇厨师
+function sureFireChef(chef = '') {
+    if (chef) {
+    }
+    // 解雇当前厨师，计算解约金
+    updateFireChefModal();
+}
+
+// 取消解雇厨师
+function cancelFireChef() {
+    updateFireChefModal();
+}
+
+// 确认点餐菜单
+// function sureOrder() {
+//     updateOrderMenuModal();
+// }
+
+// 取消点餐菜单
+function cancelOrder() {
+    updateOrderMenuModal();
+}
+
+
+// 解雇厨师
+function fireChef() {
+    updateFireChefModal();
+    // const target = e.target;
+    // const chefContainer = target.closest('.chef');
+    // const chefIndex = Game.chefs.list.findIndex(chef => chef.dom === chefContainer);
+    // if (chefIndex > -1) {
+    //     Game.chefs.list.splice(chefIndex, 1);
+    //     Game.chefs.curChefsNum--;
+    //     updateHireChefBtnDisplay();
+    //     chefContainer.remove();
+    // }
+}
+
+// 顾客到达
+// function customerArrival() {
+//     // 随机生成顾客，每天最多来一次
+//     if (Math.random() < 0.1 && Game.customers.waitingCustomers.length < Game.customers.maxWaitingCustomers) {
+//         const newCustomer = new Customer();
+//         Game.customers.waitingCustomers.push(newCustomer);
+//         renderWaitingCustomers();
+//     }
+// }
+
 /* 游戏事件 */
 
 /* 全局事件 */
 // 初始化游戏
 function initGame() {
-    // 默认有一个厨师
-    // 弹出游戏开始弹窗
+    /*
+     * 初始化游戏
+     * 1. 显示游戏开始弹窗
+     * 2. 渲染点菜菜单
+     * 3. 初始化一个厨师
+     */
+    updateGameStartModal();
     renderDishMenu();
+    renderChef();
+
+    // 绑定事件
+    ELEMENTS.startGameBtn.addEventListener('click', startGame);
+
+    ELEMENTS.hireChefBtn.addEventListener('click', updateHireChefModal);
+    ELEMENTS.sureHireChefBtn.addEventListener('click', sureHireChef);
+    ELEMENTS.cancelHireChefBtn.addEventListener('click', cancelHireChef);
+
+    ELEMENTS.sureFireChefBtn.addEventListener('click', sureFireChef);
+    ELEMENTS.cancelFireChefBtn.addEventListener('click', cancelFireChef);
+
+    // ELEMENTS.sureOrderBtn.addEventListener('click', sureOrder);
+    ELEMENTS.cancelOrderBtn.addEventListener('click', cancelOrder);
 }
 
 // 点击“开始经营吧”
 function startGame() {
-    // 隐藏游戏开始弹窗
-    // 时间开始计时
-    // 顾客随机进入餐馆
+    /*
+     * 开始游戏
+     * 1. 隐藏游戏开始弹窗
+     * 2. 开启游戏循环
+     * 3. 顾客排队等候接待
+     */
+    updateGameStartModal();
+    startGameLoop();
+    // customerArrival();
+}
+
+// 游戏循环
+function startGameLoop() {
+    Game.time.timer = setInterval(() => {
+        /*
+         * 游戏主循环
+         * 1. 更新游戏时间
+         */
+        updateGameTime();
+        // checkCustomerArrival();
+        // checkWaitingCustomers();
+        // checkChefProgress();
+        // checkTableStatus();
+    }, 1000);
 }
 
 // 更新游戏时间

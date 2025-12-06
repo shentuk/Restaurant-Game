@@ -67,7 +67,24 @@
 
 /* 厨师项 */
 .chef {
+    position: relative;
     margin: 10px 0 20px 0;
+    pointer-events: none;
+}
+
+/* 解雇厨师按钮 */
+.fireChefBtn {
+    position: absolute;
+    top: -35px;
+    right: -10px;
+    transform: rotate(45deg);
+    color: rgba(161, 128, 21, 0.8);
+    font-size: 50px;
+    pointer-events: auto;
+}
+
+.fireChefBtn.hide {
+    display: none;
 }
 
 /* 招聘厨师按钮 */

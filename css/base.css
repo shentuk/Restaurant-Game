@@ -33,7 +33,7 @@ img {
  * 状态：空闲
  * 角色：厨师、顾客、餐桌
 */
-.free {
+[data-status="free"] {
     background-image: linear-gradient(to right, #dddddd 50%, #aaaaaa 50%);
 }
 
@@ -41,6 +41,7 @@ img {
  * 状态：等待入座/入座点餐
  * 角色：顾客
 */
-.cusWaitorOrder {
+[data-status="waitingSeat"],
+[data-status="seatingOrder"] {
     background-image: linear-gradient(to right, #7591c5 50%, #2166c0 50%);
 }

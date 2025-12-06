@@ -30,43 +30,45 @@
         <main class="main-content">
 
             <!-- 厨师区域 -->
-            <section class="chef-section">
+            <section id="chefSection" class="chef-section">
                 <!-- 厨师通过JS动态生成，insertBefore方法动态插入 -->
-                <div class="chef humanHead free">
+                <!-- <div class="chef humanHead" data-status="free">
                     <img src="./images/chef.png" alt="">
-                </div>
+                    <div id="fireChefBtn" class="fireChefBtn">+</div>
+                </div> -->
+
                 <!-- 招聘厨师按钮 -->
-                <div class="hireChefBtn humanHead">
+                <div id="hireChefBtn" class="hireChefBtn humanHead">
                     <img src="./images/chef.png" alt="">
                 </div>
             </section>
 
             <!-- 用餐区域 -->
             <section class="table-section">
-                <div class="table humanHead free">
+                <div class="table humanHead" data-status="free">
                     <!-- 用餐顾客将通过JS动态生成 -->
                     <img src="./images/Zhao.png" alt="">
                 </div>
-                <div class="table humanHead free"></div>
-                <div class="table humanHead free"></div>
-                <div class="table humanHead free"></div>
+                <div class="table humanHead" data-status="free"></div>
+                <div class="table humanHead" data-status="free"></div>
+                <div class="table humanHead" data-status="free"></div>
             </section>
 
             <!-- 顾客等候区 -->
             <section class="waitingCustomer-section">
                 <!-- 等候顾客将通过JS动态生成，后插入的元素始终为第一个孩子，
                 因此顾客等待的顺序与插入的顺序相反 -->
-                <div class="customer humanHead cusWaitorOrder">
+                <div class="customer humanHead" data-status="waitingSeat">
                     <img src="./images/Zhao.png" alt="">
                 </div>
             </section>
         </main>
 
         <!-- 操作台 -->
-        <div class="operation-modal active">
+        <div id="operationModal" class="operation-modal">
 
             <!-- 游戏开始弹窗 -->
-            <div class="game-start modalCommon">
+            <div id="gameStartModal" class="game-start modalCommon">
                 <h2>WebMOOC餐厅开业啦！</h2>
                 <p>
                     WebMOOC餐厅即将开业，请认真经营你的餐厅吧<br>
@@ -77,11 +79,11 @@
                     <span>迎接客人</span>
                     <span>烹饪美食</span>
                 </p>
-                <button class="startGameBtn">开始经营吧</button>
+                <button id="startGameBtn" class="startGameBtn">开始经营吧</button>
             </div>
 
             <!-- 招聘厨师 -->
-            <div class="hire-chef modalCommon">
+            <div id="hireChefModal" class="hire-chef modalCommon">
                 <h2>招聘新厨师</h2>
                 <p>
                     招聘一名新厨师可以帮你更快地为顾客烹饪菜肴,<br>
@@ -96,7 +98,7 @@
             </div>
 
             <!-- 解雇厨师 -->
-            <div class="fire-chef modalCommon">
+            <div id="fireChefModal" class="fire-chef modalCommon">
                 <h2>解雇厨师</h2>
                 <p>
                     解雇当前闲置的厨师可以帮你节省成本。<br>
@@ -111,10 +113,11 @@
             </div>
 
             <!-- 顾客点餐菜单 -->
-            <div class="order-dish modalCommon show">
+            <div id="orderMenuModal" class="order-dish modalCommon">
                 <!-- 头像 -->
-                <div class="order-customer humanHead cusWaitorOrder">
-                    <img src="./images/Zhao.png" alt="">
+                <div class="order-customer humanHead" data-status="seatingOrder">
+                    <!-- 通过js动态生成 -->
+                    <!-- <img src="./images/Zhao.png" alt=""> -->
                 </div>
                 <!-- 点菜信息 -->
                 <div class="order-info">
