@@ -4,8 +4,13 @@
  */
 
 class ProgressBar {
-    constructor() {
-
+    constructor(options) {
+        const {
+            container,
+            progress,
+            duration,
+            callback
+        } = options;
     }
 }
 export default ProgressBar;

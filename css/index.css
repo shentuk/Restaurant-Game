@@ -133,10 +133,6 @@
     align-self: start;
 }
 
-/* 餐桌项 */
-.table {}
-
-
 /* 顾客等候区 */
 .waitingCustomer-section {
     display: flex;

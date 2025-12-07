@@ -45,3 +45,35 @@ img {
 [data-status="seatingOrder"] {
     background-image: linear-gradient(to right, #7591c5 50%, #2166c0 50%);
 }
+
+/*
+ * 状态：等待上菜
+ * 角色：顾客、餐桌
+*/
+[data-status="waitingDish"] {
+    background-image: linear-gradient(to right, #e22f29 50%, #8f0707 50%);
+}
+
+/*
+ * 状态：顾客用餐
+ * 角色：顾客、餐桌
+*/
+[data-status="eatingDish"] {
+    background-image: linear-gradient(to right, #e67d54 50%, #cc5405 50%);
+}
+
+/*
+ * 状态：吃完支付
+ * 角色：顾客、餐桌
+*/
+[data-status="paying"] {
+    background-image: linear-gradient(to right, #56d17f 50%, #0d9c0d 50%);
+}
+
+/*
+ * 状态：生气
+ * 角色：顾客、餐桌
+*/
+[data-status="angry"] {
+    background-image: linear-gradient(to right, #521919 50%, #250707 50%);
+}

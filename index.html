@@ -44,23 +44,16 @@
             </section>
 
             <!-- 用餐区域 -->
-            <section class="table-section">
-                <div class="table humanHead" data-status="free">
-                    <!-- 用餐顾客将通过JS动态生成 -->
-                    <img src="./images/Zhao.png" alt="">
-                </div>
-                <div class="table humanHead" data-status="free"></div>
-                <div class="table humanHead" data-status="free"></div>
-                <div class="table humanHead" data-status="free"></div>
+            <section id="tableSection" class="table-section">
+                <!-- <div class="humanHead" data-status="free"> -->
+                <!-- 用餐顾客将通过JS动态生成 -->
+                <!-- <img src="./images/Zhao.png" alt="">
+                </div> -->
             </section>
 
             <!-- 顾客等候区 -->
-            <section class="waitingCustomer-section">
-                <!-- 等候顾客将通过JS动态生成，后插入的元素始终为第一个孩子，
-                因此顾客等待的顺序与插入的顺序相反 -->
-                <div class="customer humanHead" data-status="waitingSeat">
-                    <img src="./images/Zhao.png" alt="">
-                </div>
+            <section id="waitingCustomerSection" class="waitingCustomer-section">
+                <!-- 等候顾客将通过JS动态生成，元素插入为第一个孩子，显示为排队界面最后一个顾客，因此顾客等待的顺序与插入的顺序相反 -->
             </section>
         </main>
 
@@ -104,7 +97,7 @@
                     解雇当前闲置的厨师可以帮你节省成本。<br>
                     解雇时会按厨师本周已经工作的日子结算工资，并会赔偿一周工资作为解约金。<br>
                     解雇当前厨师结算工资及解约金需要付出
-                    <span class="fireChefCost">￥ 140</span>
+                    <span id="fireChefCost">￥ 140</span>
                 </p>
                 <div class="operation-btn">
                     <button id="sureFireChefBtn" class="sureBtn">是的，确认解雇</button>
@@ -115,7 +108,7 @@
             <!-- 顾客点餐菜单 -->
             <div id="orderMenuModal" class="order-dish modalCommon">
                 <!-- 头像 -->
-                <div class="order-customer humanHead" data-status="seatingOrder">
+                <div id="orderCustomerImg" class="order-customer humanHead" data-status="seatingOrder">
                     <!-- 通过js动态生成 -->
                     <!-- <img src="./images/Zhao.png" alt=""> -->
                 </div>
@@ -124,7 +117,7 @@
                     <span id="orderCustomerName">QIAN</span> 正在点菜，已点 <span id="checkedDishsTotalPrice">0</span> 元的菜
                 </div>
                 <!-- 点菜菜单 -->
-                <div class="order-menu" id="order-menu">
+                <div id="orderMenu" class="order-menu">
                     <!-- 菜单将通过JS动态生成 -->
                 </div>
                 <!-- 操作按钮 -->

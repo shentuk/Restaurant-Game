@@ -10,6 +10,10 @@ import ELEMENTS from './doms.js';
 import Chef from './chef.js';
 // 顾客类
 import Customer from './customer.js';
+// 餐桌类
+import Table from './table.js';
+// 进度条类
+// import ProgressBar from './progressbar.js';
 
 /* 更新显示 */
 // 更新时间显示
@@ -21,27 +25,6 @@ function updateTimeDisplay() {
 // 更新金钱显示
 function updateMoneyDisplay() {
     ELEMENTS.moneyDisplay.textContent = Game.money;
-}
-
-// 更新顾客点餐时已选中的菜品总金额显示
-function updateCheckedDishsTotalPriceDisplay(price) {
-    ELEMENTS.checkedDishsTotalPrice.textContent = price;
-}
-
-// 更新确认点菜按钮显示
-function updateSureOrderBtnDisplay(curCheckedDishsType) {
-    // 统计每种菜品类型的数量
-    const zhucaiCount = curCheckedDishsType.filter(dish => dish === 'zhucai').length;
-    const liangcaiCount = curCheckedDishsType.filter(dish => dish === 'liangcai').length;
-    const drinkCount = curCheckedDishsType.filter(dish => dish === 'drink').length;
-
-    const isValid = (
-        zhucaiCount === 1 &&  // zhucai必有且只能有一个
-        liangcaiCount <= 1 && // liangcai最多一个
-        drinkCount <= 1       // drink最多一个
-    );
-
-    ELEMENTS.sureOrderBtn.disabled = !isValid;
 }
 
 // 更新操作台显示
@@ -68,9 +51,34 @@ function updateFireChefModal() {
 }
 
 // 更新点餐菜单操作台显示
-function updateOrderMenuModal() {
+function updateOrderMenuModal(customer = '') {
+    if (customer) {
+        ELEMENTS.orderCustomerImg.innerHTML = `<img src=${customer.head} alt="">`;
+        ELEMENTS.orderCustomerName.textContent = customer.name;
+    }
     updateOperationModalDisplay();
     ELEMENTS.orderMenuModal.classList.toggle('show');
+}
+
+// 更新顾客点餐时已选中的菜品总金额显示
+function updateCheckedDishsTotalPriceDisplay(price) {
+    ELEMENTS.checkedDishsTotalPrice.textContent = price;
+}
+
+// 更新确认点菜按钮显示
+function updateSureOrderBtnDisplay(curCheckedDishsType) {
+    // 统计每种菜品类型的数量
+    const zhucaiCount = curCheckedDishsType.filter(dish => dish === 'zhucai').length;
+    const liangcaiCount = curCheckedDishsType.filter(dish => dish === 'liangcai').length;
+    const drinkCount = curCheckedDishsType.filter(dish => dish === 'drink').length;
+
+    const isValid = (
+        zhucaiCount === 1 &&  // zhucai必有且只能有一个
+        liangcaiCount <= 1 && // liangcai最多一个
+        drinkCount <= 1       // drink最多一个
+    );
+
+    ELEMENTS.sureOrderBtn.disabled = !isValid;
 }
 
 // 更新招聘厨师按钮显示
@@ -118,15 +126,23 @@ function renderDishMenu() {
 function renderChef() {
     const chef = new Chef();
     Game.chefs.list.push(chef);
-    ELEMENTS.chefSection.insertBefore(chef.dom, ELEMENTS.hireChefBtn);
     // 更新当前厨师数
     Game.chefs.curChefsNum++;
     updateHireChefBtnDisplay();
 }
+
+// 渲染餐桌
+function renderTable() {
+    for (let i = 1; i <= Game.tables.emptyNum; i++) {
+        const table = new Table(i);
+        Game.tables.list.push(table);
+    }
+}
+
 /* 更新显示 */
 
 /* 工具函数 */
-// 切换菜单项选择
+// 切换菜品项选择
 function toggleMenuItem(e, dish) {
     const target = e.target;
     if (target.checked) {
@@ -140,6 +156,18 @@ function toggleMenuItem(e, dish) {
         Game.dishMenu.curCheckedDishsTotalPrice -= dish.price;
     }
 
+    updateCheckedDishsTotalPriceDisplay(Game.dishMenu.curCheckedDishsTotalPrice);
+    updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishsType);
+}
+
+// 所有菜品选中清除
+function clearCheckedDishs() {
+    // 取消所有菜品选中
+    ELEMENTS.orderMenuContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    Game.dishMenu.curCheckedDishsType = [];
+    Game.dishMenu.curCheckedDishsTotalPrice = 0;
     updateCheckedDishsTotalPriceDisplay(Game.dishMenu.curCheckedDishsTotalPrice);
     updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishsType);
 }
@@ -169,10 +197,15 @@ function cancelHireChef() {
 }
 
 // 确认解雇厨师
-function sureFireChef(chef = '') {
-    if (chef) {
-    }
-    // 解雇当前厨师，计算解约金
+function sureFireChef() {
+    // 总金额-解约金
+    // const severancePay = Game.chefs.chefWeeklySalary * Game.chefs. severancePayRate;
+    // updateGameMoney(-severancePay);
+    // 去掉当前厨师
+    // Game.chefs.list.pop();
+    // Game.chefs.curChefsNum--;
+    // dom.remove();
+    updateHireChefBtnDisplay();
     updateFireChefModal();
 }
 
@@ -182,18 +215,20 @@ function cancelFireChef() {
 }
 
 // 确认点餐菜单
-// function sureOrder() {
-//     updateOrderMenuModal();
-// }
-
-// 取消点餐菜单
-function cancelOrder() {
+function sureOrder() {
+    clearCheckedDishs();
     updateOrderMenuModal();
 }
 
+// 取消点餐菜单
+function cancelOrder() {
+    clearCheckedDishs();
+    updateOrderMenuModal();
+}
 
 // 解雇厨师
 function fireChef() {
+    // 解雇当前厨师，计算解约金
     updateFireChefModal();
     // const target = e.target;
     // const chefContainer = target.closest('.chef');
@@ -206,32 +241,63 @@ function fireChef() {
     // }
 }
 
-// 顾客到达
-// function customerArrival() {
-//     // 随机生成顾客，每天最多来一次
-//     if (Math.random() < 0.1 && Game.customers.waitingCustomers.length < Game.customers.maxWaitingCustomers) {
-//         const newCustomer = new Customer();
-//         Game.customers.waitingCustomers.push(newCustomer);
-//         renderWaitingCustomers();
-//     }
-// }
+// 初始化顾客
+function initCustomers() {
+    for (let i = 0; i < Game.customers.list.length; i++) {
+        const customer = new Customer(Game.customers.list[i].id, Game.customers.list[i].name, Game.customers.list[i].head);
+        Game.customers.list[i] = customer;
+    }
+}
+
+// 检查顾客到达
+function checkCustomerArrival() {
+    // 随机生成顾客，每天最多来一次
+    if (Math.random() < 0.1) {
+        const index = Math.floor(Math.random() * Game.customers.list.length);
+        const customer = Game.customers.list.splice(index, 1)[0];
+
+        // 检查等候区是否已满
+        if (Game.customers.waitingCustomers.length >= Game.customers.maxWaitingCustomers) {
+            return;
+        }
+
+        // 顾客进入等候区
+        customer.waitingSeat();
+        Game.customers.waitingCustomers.push(customer);
+    }
+}
+
+// 招待顾客
+function serveWaitingCustomers() {
+    // 检查是否有顾客在等待
+    if (Game.customers.waitingCustomers.length <= 0) {
+        return;
+    }
+    // 检查是否有可用的桌位
+    if (Game.tables.emptyNum <= 0) {
+        return;
+    }
+    // 为顾客服务, 从等待队列中招待第一位顾客
+    const customer = Game.customers.waitingCustomers.shift();
+    // 为顾客分配桌位
+    for (const table of Game.tables.list) {
+        if (table.status === 'free') {
+            table.assignCustomer(customer);
+            Game.tables.emptyNum--;
+            break; // 找到空闲餐桌后立即跳出循环
+        }
+    }
+    // 顾客入座点菜
+    customer.seatingOrder();
+
+    updateOrderMenuModal(customer);
+}
 
 /* 游戏事件 */
 
 /* 全局事件 */
-// 初始化游戏
-function initGame() {
-    /*
-     * 初始化游戏
-     * 1. 显示游戏开始弹窗
-     * 2. 渲染点菜菜单
-     * 3. 初始化一个厨师
-     */
-    updateGameStartModal();
-    renderDishMenu();
-    renderChef();
-
-    // 绑定事件
+// 绑定事件
+function bindEvents() {
     ELEMENTS.startGameBtn.addEventListener('click', startGame);
 
     ELEMENTS.hireChefBtn.addEventListener('click', updateHireChefModal);
@@ -241,21 +307,40 @@ function initGame() {
     ELEMENTS.sureFireChefBtn.addEventListener('click', sureFireChef);
     ELEMENTS.cancelFireChefBtn.addEventListener('click', cancelFireChef);
 
-    // ELEMENTS.sureOrderBtn.addEventListener('click', sureOrder);
+    ELEMENTS.waitingCustomerSection.addEventListener('click', serveWaitingCustomers);
+    ELEMENTS.sureOrderBtn.addEventListener('click', sureOrder);
     ELEMENTS.cancelOrderBtn.addEventListener('click', cancelOrder);
 }
 
-// 点击“开始经营吧”
+// 初始化游戏
+function initGame() {
+    /*
+     * 初始化游戏
+     * 1. 显示游戏开始弹窗
+     * 2. 渲染点菜菜单
+     * 3. 渲染厨师（默认一个）
+     * 4. 渲染餐桌（默认四个）
+     * 5. 初始化顾客（所有顾客实例）
+     * 6. 绑定事件（全局）
+     */
+    updateGameStartModal();
+    renderDishMenu();
+    renderChef();
+    renderTable();
+    initCustomers();
+    bindEvents();
+}
+
+// 开始游戏
 function startGame() {
     /*
      * 开始游戏
      * 1. 隐藏游戏开始弹窗
-     * 2. 开启游戏循环
-     * 3. 顾客排队等候接待
+     * 2. 顾客排队等候接待
+     * 3. 开启游戏循环
      */
     updateGameStartModal();
     startGameLoop();
-    // customerArrival();
 }
 
 // 游戏循环
@@ -266,7 +351,7 @@ function startGameLoop() {
          * 1. 更新游戏时间
          */
         updateGameTime();
-        // checkCustomerArrival();
+        checkCustomerArrival();
         // checkWaitingCustomers();
         // checkChefProgress();
         // checkTableStatus();

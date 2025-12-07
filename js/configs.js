@@ -55,26 +55,21 @@ export default {
     },
     // 顾客配置
     customers: {
-        list: [
-            { name: 'Zhao', head: 'images/Zhao.png', status: 'free' },
-            { name: 'Qian', head: 'images/Qian.png', status: 'free' },
-            { name: 'Sun', head: 'images/Sun.png', status: 'free' },
-            { name: 'Li', head: 'images/Li.png', status: 'free' },
-            { name: 'Zhou', head: 'images/Zhou.png', status: 'free' },
-            { name: 'Wu', head: 'images/Wu.png', status: 'free' },
-            { name: 'Zhen', head: 'images/Zhen.png', status: 'free' }
-        ],       // 顾客队列
+        list: [    // 顾客队列
+            { id: 1, name: 'Zhao', head: 'images/Zhao.png' },
+            { id: 2, name: 'Qian', head: 'images/Qian.png' },
+            { id: 3, name: 'Sun', head: 'images/Sun.png' },
+            { id: 4, name: 'Li', head: 'images/Li.png' },
+            { id: 5, name: 'Zhou', head: 'images/Zhou.png' },
+            { id: 6, name: 'Wu', head: 'images/Wu.png' },
+            { id: 7, name: 'Zhen', head: 'images/Zhen.png' }
+        ],
         maxWaitingCustomers: 6, // 最大等待顾客数
         waitingCustomers: [],   // 等待顾客队列
     },
     // 餐桌配置
     tables: {
         emptyNum: 4,    // 空桌数
-        list: [
-            { id: 1, status: 'empty', customer: null, food: [] },
-            { id: 2, status: 'empty', customer: null, food: [] },
-            { id: 3, status: 'empty', customer: null, food: [] },
-            { id: 4, status: 'empty', customer: null, food: [] }
-        ],
+        list: []        // 餐桌队列
     },
 }
