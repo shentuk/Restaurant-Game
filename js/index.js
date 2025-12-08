@@ -160,7 +160,7 @@ function toggleMenuItem(e, dish) {
     updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishsType);
 }
 
-// 所有菜品选中清除
+// 重置已选中的菜品
 function clearCheckedDishs() {
     // 取消所有菜品选中
     ELEMENTS.orderMenuContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -216,29 +216,29 @@ function cancelFireChef() {
 
 // 确认点餐菜单
 function sureOrder() {
+    for (const table of Game.tables.list) {
+        if (table.status === 'occupied' && table.customer.status === 'seatingOrder') {
+            // 点好菜等待上菜
+            table.customer.waitingDish();
+            table.changeStatus();
+            break;
+        }
+    }
     clearCheckedDishs();
     updateOrderMenuModal();
 }
 
 // 取消点餐菜单
 function cancelOrder() {
+    // 顾客从座位区离开
+    for (const table of Game.tables.list) {
+        if (table.status === 'occupied' && table.customer.status === 'seatingOrder') {
+            table.free();
+            break;
+        }
+    }
     clearCheckedDishs();
     updateOrderMenuModal();
-}
-
-// 解雇厨师
-function fireChef() {
-    // 解雇当前厨师，计算解约金
-    updateFireChefModal();
-    // const target = e.target;
-    // const chefContainer = target.closest('.chef');
-    // const chefIndex = Game.chefs.list.findIndex(chef => chef.dom === chefContainer);
-    // if (chefIndex > -1) {
-    //     Game.chefs.list.splice(chefIndex, 1);
-    //     Game.chefs.curChefsNum--;
-    //     updateHireChefBtnDisplay();
-    //     chefContainer.remove();
-    // }
 }
 
 // 初始化顾客
@@ -249,12 +249,28 @@ function initCustomers() {
     }
 }
 
+// 重置每日顾客
+function resetDailyCustomers() {
+    // 只重置等待区顾客，还在座位的顾客不重置，可能会造成进入等待区的顾客和座位区的顾客重复
+    Game.customers.waitingCustomers.forEach(customer => {
+        customer.leave();
+    });
+    Game.customers.customersVisitedToday = [];
+}
+
 // 检查顾客到达
 function checkCustomerArrival() {
     // 随机生成顾客，每天最多来一次
     if (Math.random() < 0.1) {
-        const index = Math.floor(Math.random() * Game.customers.list.length);
-        const customer = Game.customers.list.splice(index, 1)[0];
+        const customer = Game.customers.list[Math.floor(Math.random() * Game.customers.list.length)];
+
+        // 检查顾客是否来过
+        if (Game.customers.customersVisitedToday.includes(customer.id)) {
+            return;
+        }
+
+        // 标记这个顾客来过
+        customer.arrival();
 
         // 检查等候区是否已满
         if (Game.customers.waitingCustomers.length >= Game.customers.maxWaitingCustomers) {
@@ -263,7 +279,6 @@ function checkCustomerArrival() {
 
         // 顾客进入等候区
         customer.waitingSeat();
-        Game.customers.waitingCustomers.push(customer);
     }
 }
 
@@ -300,7 +315,7 @@ function serveWaitingCustomers() {
 function bindEvents() {
     ELEMENTS.startGameBtn.addEventListener('click', startGame);
 
-    ELEMENTS.hireChefBtn.addEventListener('click', updateHireChefModal);
+    ELEMENTS.hireChefBtn.addEventListener('click', updateHireChefModal);  // 招聘厨师按钮
     ELEMENTS.sureHireChefBtn.addEventListener('click', sureHireChef);
     ELEMENTS.cancelHireChefBtn.addEventListener('click', cancelHireChef);
 
@@ -336,8 +351,7 @@ function startGame() {
     /*
      * 开始游戏
      * 1. 隐藏游戏开始弹窗
-     * 2. 顾客排队等候接待
-     * 3. 开启游戏循环
+     * 2. 开启游戏循环
      */
     updateGameStartModal();
     startGameLoop();
@@ -349,6 +363,10 @@ function startGameLoop() {
         /*
          * 游戏主循环
          * 1. 更新游戏时间
+         * 2. 检查顾客到达
+         * 3. 检查等待顾客
+         * 4. 检查厨师进度
+         * 5. 检查桌位状态
          */
         updateGameTime();
         checkCustomerArrival();
@@ -386,6 +404,9 @@ function updateGameTime() {
                 chef.daysWorked = 0;
             });
         }
+
+        // 重置每日顾客
+        resetDailyCustomers();
 
         // 更新时间显示
         updateTimeDisplay();

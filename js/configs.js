@@ -66,6 +66,7 @@ export default {
         ],
         maxWaitingCustomers: 6, // 最大等待顾客数
         waitingCustomers: [],   // 等待顾客队列
+        customersVisitedToday: [], // 今天已经来过的顾客
     },
     // 餐桌配置
     tables: {
