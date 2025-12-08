@@ -13,7 +13,7 @@ import Customer from './customer.js';
 // 餐桌类
 import Table from './table.js';
 // 进度条类
-// import ProgressBar from './progressbar.js';
+import ProgressBar from './progressbar.js';
 
 /* 更新显示 */
 // 更新时间显示

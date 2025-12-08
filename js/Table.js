@@ -13,7 +13,7 @@ class Table {
     // 初始化餐桌
     init() {
         this.dom = document.createElement('div');
-        this.dom.classList.add('humanHead');
+        this.dom.classList.add('table', 'humanHead');
         // 插入到餐桌容器中
         ELEMENTS.tableSection.appendChild(this.dom);
     }
@@ -37,20 +37,16 @@ class Table {
     changeStatus() {
         const status = this.customer.status;
         if (status === 'waitingDish') {
-            // 等待上菜
-            this.dom.dataset.status = 'waitingDish';
+            this.dom.dataset.status = 'waitingDish';// 等待上菜
         }
         else if (status === 'eatingDish') {
-            // 顾客用餐
-            this.dom.dataset.status = 'eatingDish';
+            this.dom.dataset.status = 'eatingDish';// 顾客用餐
         }
         else if (status === 'paying') {
-            // 顾客支付
-            this.dom.dataset.status = 'paying';
+            this.dom.dataset.status = 'paying';// 顾客支付
         }
         else if (status === 'angry') {
-            // 顾客生气
-            this.dom.dataset.status = 'angry';
+            this.dom.dataset.status = 'angry';// 顾客生气
         }
     }
 }

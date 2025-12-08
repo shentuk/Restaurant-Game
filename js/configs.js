@@ -66,6 +66,7 @@ export default {
         ],
         maxWaitingCustomers: 6, // 最大等待顾客数
         waitingCustomers: [],   // 等待顾客队列
+        waitingTime: 10,        // 顾客等位时间10秒
         customersVisitedToday: [], // 今天已经来过的顾客
     },
     // 餐桌配置
@@ -73,4 +74,14 @@ export default {
         emptyNum: 4,    // 空桌数
         list: []        // 餐桌队列
     },
+    // 进度条配置
+    progressBar: {
+        waitingSeatColor: ['#4299e1', '#2166c0'], // 顾客等位条颜色
+        waitingDishColor: ['#e22f29', '#8f0707'], // 顾客等菜条颜色
+        eatingDishColor: ['#e67d54', '#cc5405'], // 顾客用餐条颜色
+        payingColor: '#0d9c0d', // 顾客支付条颜色
+        angryColor: '#250707ff', // 顾客愤怒条颜色
+        cookingColor: ['#e67d54', '#b44d08'], // 厨师做菜条颜色
+        finishCookingColor: '#947de6', // 厨师做完菜条颜色
+    }
 }

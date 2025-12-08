@@ -22,6 +22,7 @@ img {
 
 /* 人头像，餐桌像 */
 .humanHead {
+    position: relative;
     width: 76px;
     height: 76px;
     border-radius: 50%;
@@ -31,10 +32,26 @@ img {
 /* 背景底色 */
 /*
  * 状态：空闲
- * 角色：厨师、顾客、餐桌
+ * 角色：厨师、餐桌
 */
 [data-status="free"] {
     background-image: linear-gradient(to right, #dddddd 50%, #aaaaaa 50%);
+}
+
+/*
+ * 状态：做菜中
+ * 角色：厨师
+*/
+[data-status="cooking"] {
+    background-image: linear-gradient(to right, #e67d54 50%, #b44d08 50%);
+}
+
+/*
+ * 状态：做完菜
+ * 角色：厨师
+*/
+[data-status="finishCooking"] {
+    background-image: linear-gradient(to right, #947de6 50%, #4129af 50%);
 }
 
 /*
@@ -71,7 +88,7 @@ img {
 }
 
 /*
- * 状态：生气
+ * 状态：超时生气
  * 角色：顾客、餐桌
 */
 [data-status="angry"] {

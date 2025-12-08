@@ -72,6 +72,15 @@
     pointer-events: none;
 }
 
+/* 厨师完成等待上菜图标 */
+.chef .chefCookDoneIcon {
+    position: absolute;
+    left: -11px;
+    bottom: -3px;
+    width: 53px;
+    height: 53px;
+}
+
 /* 解雇厨师按钮 */
 .fireChefBtn {
     position: absolute;
@@ -116,6 +125,8 @@
     display: none;
 }
 
+/* 厨师区域 */
+
 /* 用餐区域 */
 .table-section {
     display: grid;
@@ -132,6 +143,57 @@
 .table:nth-child(n+3) {
     align-self: start;
 }
+
+/* 桌上菜品 */
+.table .checkedDishs {
+    position: absolute;
+    top: 0;
+    left: 80%;
+    width: 100%;
+    height: 100%;
+}
+
+.checkedDish {
+    position: relative;
+    margin-bottom: 2px;
+}
+
+.checkedDish:last-child {
+    margin-bottom: 0;
+}
+
+/* 上菜图标 */
+.serveDishIcon {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 21px;
+    height: 21px;
+    border: 2px solid #fff;
+    background-color: #8f0707;
+    border-radius: 50%;
+}
+
+.serveDishIcon img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+}
+
+/* 支付钱币图标/安抚顾客图标 */
+.payIcon,
+.appeaseIcon {
+    position: absolute;
+    bottom: -12px;
+    left: -16px;
+    width: 50px;
+    height: 50px;
+}
+
+/* 用餐区域 */
 
 /* 顾客等候区 */
 .waitingCustomer-section {
@@ -171,6 +233,8 @@
 .customer:nth-child(6) {
     transform: translateX(110px);
 }
+
+/* 顾客等候区 */
 
 /* 主体内容 */
 
@@ -336,3 +400,31 @@
 }
 
 /* 消息提示 */
+
+/* 进度条 */
+.progressbar {
+    width: 100%;
+    height: 21px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    background-color: blue;
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
+    line-height: 17px;
+}
+
+/* 厨师和等位顾客的进度条在下方 */
+#chefSection .progressbar {
+    position: absolute;
+    left: 0;
+    bottom: -12px;
+}
+
+#waitingCustomerSection .progressbar {
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+}
+
+/* 进度条 */

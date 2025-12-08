@@ -4,6 +4,7 @@
 
 import ELEMENTS from './doms.js';
 import Game from './configs.js';
+import ProgressBar from './progressbar.js';
 
 class Customer {
     constructor(id, name, head) {
@@ -29,6 +30,9 @@ class Customer {
     waitingSeat() {
         this.status = 'waitingSeat';
         this.dom.dataset.status = this.status;
+        // 顾客等位条
+        this.waitingSeatBar = new ProgressBar('等位中', Game.customers.waitingTime, Game.progressBar.waitingSeatColor[0], Game.progressBar.waitingSeatColor[1]);
+        this.dom.appendChild(this.waitingSeatBar.dom);
         // 插入到等待顾客队列中
         ELEMENTS.waitingCustomerSection.insertBefore(this.dom, ELEMENTS.waitingCustomerSection.firstElementChild);
         Game.customers.waitingCustomers.push(this);
