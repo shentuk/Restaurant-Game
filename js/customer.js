@@ -64,9 +64,9 @@ class Customer {
     paying() {
         this.status = 'paying';
     }
-    // 离开餐厅（一天过后排队顾客离开、排队时间太长、放弃点餐、等餐太久顾客生气、顾客用餐完成支付）
+    // 离开（一天过后排队顾客离开、排队时间太长、放弃点餐、等餐太久顾客生气、顾客用餐完成支付）
     leave() {
-        // 一天过后排队顾客离开/排队时间太长离开
+        // 一天过后排队顾客离开/排队时间太长离开/招待顾客离开等待队列
         if (this.status === 'waitingSeat') {
             // 从等待顾客队列中移除
             Game.customers.waitingCustomers = Game.customers.waitingCustomers.filter(customer => customer.id !== this.id);

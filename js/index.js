@@ -35,6 +35,12 @@ function updateMoneyDisplay() {
 // 更新操作台显示
 function updateOperationModalDisplay() {
     ELEMENTS.operationModal.classList.toggle('active');
+    // 操作阶段停止时间运行
+    if (ELEMENTS.operationModal.classList.contains('active')) {
+        Game.time.start = false;
+    } else {
+        Game.time.start = true;
+    }
 }
 
 // 更新游戏开始弹窗显示
@@ -218,43 +224,42 @@ function cancelFireChef() {
 
 // 确认点餐菜单
 function sureOrder() {
-    for (const table of Game.tables.list) {
-        // 需要把菜给桌子上的点菜状态的顾客
-        if (table.customer.status === 'seatingOrder') {
-            console.log('sureOrder', table);
-            // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
-            Game.dishMenu.curCheckedDishs.forEach(dish => {
-                const dishInstance = new ProgressBar(table, {
-                    text: dish.name,
-                    time: dish.waitingTime,
-                    startColor: Game.progressBar.waitingDishColor[0],
-                    endColor: Game.progressBar.waitingDishColor[1],
-                });
-                table.food.push(dishInstance);
-                Game.dishMenu.todo.push(dishInstance);
-            });
-            // 点好菜等待上菜
-            table.customer.waitingDish();
-            // 分配菜单
-            table.assignMenu();
-            break;
-        }
-    }
-    clearCheckedDishs();
-    updateOrderMenuModal();
+    // for (const table of Game.tables.list) {
+    //     // 需要把菜给桌子上的点菜状态的顾客
+    //     if (table.customer.status === 'seatingOrder') {
+    //         // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
+    //         Game.dishMenu.curCheckedDishs.forEach(dish => {
+    //             const dishInstance = new ProgressBar(table, {
+    //                 text: dish.name,
+    //                 time: dish.waitingTime,
+    //                 startColor: Game.progressBar.waitingDishColor[0],
+    //                 endColor: Game.progressBar.waitingDishColor[1],
+    //             });
+    //             table.food.push(dishInstance);
+    //             Game.dishMenu.todo.push(dishInstance);
+    //         });
+    //         // 点好菜等待上菜
+    //         table.customer.waitingDish();
+    //         // 分配菜单
+    //         table.assignMenu();
+    //         break;
+    //     }
+    // }
+    // clearCheckedDishs();
+    // updateOrderMenuModal();
 }
 
-// 取消点餐菜单
+// 取消点餐菜单--！！！始终有问题，第二天如果
 function cancelOrder() {
-    // 顾客从座位区离开
-    for (const table of Game.tables.list) {
-        if (table.customer.status === 'seatingOrder') {
-            table.free();
-            break;
-        }
-    }
-    clearCheckedDishs();
-    updateOrderMenuModal();
+    // // 顾客从座位区离开
+    // for (const table of Game.tables.list) {
+    //     if (table.status === 'occupied' && table.customer.status === 'seatingOrder') {
+    //         table.free();
+    //         break;
+    //     }
+    // }
+    // clearCheckedDishs();
+    // updateOrderMenuModal();
 }
 
 // 初始化顾客
@@ -274,8 +279,8 @@ function resetDailyCustomers() {
     Game.customers.customersVisitedToday = [];
 }
 
-// 检查顾客到达
-function checkCustomerArrival() {
+// 顾客到达餐厅
+function customerArrival() {
     // 随机生成顾客，每天最多来一次
     if (Math.random() < 0.1) {
         const customer = Game.customers.list[Math.floor(Math.random() * Game.customers.list.length)];
@@ -308,19 +313,21 @@ function serveWaitingCustomers() {
     if (Game.tables.emptyNum <= 0) {
         return;
     }
-    // 为顾客服务, 从等待队列中招待第一位顾客, 并移除队列
-    const customer = Game.customers.waitingCustomers.shift();
     for (const table of Game.tables.list) {
+        // 找到一个空桌位，为顾客服务
         if (table.status === 'free') {
+            // 为顾客服务, 从等待队列中招待第一位顾客, 并移除队列
+            const customer = Game.customers.waitingCustomers.shift();
             // 为顾客分配桌位
             table.assignCustomer(customer);
             // 顾客入座点菜
             table.customer.seatingOrder();
+            updateOrderMenuModal(table.customer);
             break; // 找到空闲餐桌后立即跳出循环
         }
     }
+    console.log(Game.tables.list);
 
-    updateOrderMenuModal(customer);
 }
 
 // 检查空闲厨师
@@ -387,16 +394,20 @@ function startGame() {
 // 游戏循环
 function startGameLoop() {
     Game.time.timer = setInterval(() => {
+        // 检查游戏是否开始
+        if (!Game.time.start) {
+            return;
+        }
         /*
          * 游戏主循环
          * 1. 更新游戏时间
-         * 2. 检查顾客到达
+         * 2. 顾客到达餐厅
          * 3. 检查空闲厨师
          * 4. 检查厨师进度
          * 5. 检查桌位状态
          */
         updateGameTime();
-        checkCustomerArrival();
+        customerArrival();
         checkFreeChef();
         // checkChefProgress();
         // checkTableStatus();

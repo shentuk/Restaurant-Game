@@ -33,7 +33,7 @@ class Table {
     // 分配顾客点餐
     assignCustomer(customer) {
         this.status = 'occupied'; // 占用状态
-        this.customer = customer;
+        this.customer = customer; // 顾客实例
         this.dom.innerHTML = `
             <img src=${this.customer.head} alt="">
             <div class="checkedDishs"></div>
