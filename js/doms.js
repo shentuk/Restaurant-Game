@@ -9,7 +9,7 @@ export default {
     hireChefModal: document.getElementById('hireChefModal'), // 招聘新厨师操作台
     fireChefModal: document.getElementById('fireChefModal'), // 解雇厨师操作台
     orderMenuModal: document.getElementById('orderMenuModal'), // 顾客点餐菜单操作台
-    orderCustomerImg: document.getElementById('orderCustomerImg'), // 顾客头像
+    orderCustomerHead: document.getElementById('orderCustomerHead'), // 顾客头像
     orderCustomerName: document.getElementById('orderCustomerName'), // 顾客姓名
 
     startGameBtn: document.getElementById('startGameBtn'), // 开始游戏按钮

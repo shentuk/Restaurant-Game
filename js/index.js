@@ -1,5 +1,10 @@
 /*
  * 主函数入口
+ * 战略思想：把系统需求抽象成某种高层的概念，然后在概念层次上进行编程
+ * 战术思想：
+ * 1.通过面向对象编程，将角色（如厨师、顾客、餐桌）抽象成类，每个类负责管理自己的状态和行为，让实例来工作
+ * 2.模块化的方式，更加清晰和可维护
+ * 3.函数式编程思想：将系统需求分解成多个函数，每个函数负责完成一个具体的任务
  */
 
 // 游戏全局配置
@@ -53,7 +58,7 @@ function updateFireChefModal() {
 // 更新点餐菜单操作台显示
 function updateOrderMenuModal(customer = '') {
     if (customer) {
-        ELEMENTS.orderCustomerImg.innerHTML = `<img src=${customer.head} alt="">`;
+        ELEMENTS.orderCustomerHead.innerHTML = `<img src=${customer.head} alt="">`;
         ELEMENTS.orderCustomerName.textContent = customer.name;
     }
     updateOperationModalDisplay();
@@ -66,11 +71,11 @@ function updateCheckedDishsTotalPriceDisplay(price) {
 }
 
 // 更新确认点菜按钮显示
-function updateSureOrderBtnDisplay(curCheckedDishsType) {
+function updateSureOrderBtnDisplay(curCheckedDishs) {
     // 统计每种菜品类型的数量
-    const zhucaiCount = curCheckedDishsType.filter(dish => dish === 'zhucai').length;
-    const liangcaiCount = curCheckedDishsType.filter(dish => dish === 'liangcai').length;
-    const drinkCount = curCheckedDishsType.filter(dish => dish === 'drink').length;
+    const zhucaiCount = curCheckedDishs.filter(dish => dish.type === 'zhucai').length;
+    const liangcaiCount = curCheckedDishs.filter(dish => dish.type === 'liangcai').length;
+    const drinkCount = curCheckedDishs.filter(dish => dish.type === 'drink').length;
 
     const isValid = (
         zhucaiCount === 1 &&  // zhucai必有且只能有一个
@@ -102,7 +107,7 @@ function renderDishMenu() {
             const menuItem = document.createElement('dd');
             menuItem.innerHTML = `
                 <label>
-                    <input type="checkbox" name="${typeItem.type}" value="${dish.name}"">
+                    <input type="checkbox" name="${dish.type}" value="${dish.name}"">
                     ${dish.name}
                 </label>
                 <div>
@@ -146,18 +151,15 @@ function renderTable() {
 function toggleMenuItem(e, dish) {
     const target = e.target;
     if (target.checked) {
-        Game.dishMenu.curCheckedDishsType.push(target.name);
+        Game.dishMenu.curCheckedDishs.push(dish);
         Game.dishMenu.curCheckedDishsTotalPrice += dish.price;
     } else {
-        const index = Game.dishMenu.curCheckedDishsType.indexOf(target.name);
-        if (index > -1) {
-            Game.dishMenu.curCheckedDishsType.splice(index, 1);
-        }
+        Game.dishMenu.curCheckedDishs = Game.dishMenu.curCheckedDishs.filter(dish => dish.name !== target.value);
         Game.dishMenu.curCheckedDishsTotalPrice -= dish.price;
     }
 
     updateCheckedDishsTotalPriceDisplay(Game.dishMenu.curCheckedDishsTotalPrice);
-    updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishsType);
+    updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishs);
 }
 
 // 重置已选中的菜品
@@ -166,10 +168,10 @@ function clearCheckedDishs() {
     ELEMENTS.orderMenuContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
     });
-    Game.dishMenu.curCheckedDishsType = [];
+    Game.dishMenu.curCheckedDishs = [];
     Game.dishMenu.curCheckedDishsTotalPrice = 0;
     updateCheckedDishsTotalPriceDisplay(Game.dishMenu.curCheckedDishsTotalPrice);
-    updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishsType);
+    updateSureOrderBtnDisplay(Game.dishMenu.curCheckedDishs);
 }
 
 // 支付厨师工资
@@ -217,10 +219,24 @@ function cancelFireChef() {
 // 确认点餐菜单
 function sureOrder() {
     for (const table of Game.tables.list) {
-        if (table.status === 'occupied' && table.customer.status === 'seatingOrder') {
+        // 需要把菜给桌子上的点菜状态的顾客
+        if (table.customer.status === 'seatingOrder') {
+            console.log('sureOrder', table);
+            // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
+            Game.dishMenu.curCheckedDishs.forEach(dish => {
+                const dishInstance = new ProgressBar(table, {
+                    text: dish.name,
+                    time: dish.waitingTime,
+                    startColor: Game.progressBar.waitingDishColor[0],
+                    endColor: Game.progressBar.waitingDishColor[1],
+                });
+                table.food.push(dishInstance);
+                Game.dishMenu.todo.push(dishInstance);
+            });
             // 点好菜等待上菜
             table.customer.waitingDish();
-            table.changeStatus();
+            // 分配菜单
+            table.assignMenu();
             break;
         }
     }
@@ -232,7 +248,7 @@ function sureOrder() {
 function cancelOrder() {
     // 顾客从座位区离开
     for (const table of Game.tables.list) {
-        if (table.status === 'occupied' && table.customer.status === 'seatingOrder') {
+        if (table.customer.status === 'seatingOrder') {
             table.free();
             break;
         }
@@ -292,20 +308,31 @@ function serveWaitingCustomers() {
     if (Game.tables.emptyNum <= 0) {
         return;
     }
-    // 为顾客服务, 从等待队列中招待第一位顾客
+    // 为顾客服务, 从等待队列中招待第一位顾客, 并移除队列
     const customer = Game.customers.waitingCustomers.shift();
-    // 为顾客分配桌位
     for (const table of Game.tables.list) {
         if (table.status === 'free') {
+            // 为顾客分配桌位
             table.assignCustomer(customer);
-            Game.tables.emptyNum--;
+            // 顾客入座点菜
+            table.customer.seatingOrder();
             break; // 找到空闲餐桌后立即跳出循环
         }
     }
-    // 顾客入座点菜
-    customer.seatingOrder();
 
     updateOrderMenuModal(customer);
+}
+
+// 检查空闲厨师
+function checkFreeChef() {
+    // // 检查是否有空闲厨师
+    // const freeChef = Game.chefs.list.find(chef => chef.status === 'free');
+    // // 检查是否有待做菜单
+    // const waitingDish = Game.tables.list.some(table => table.status === 'occupied' && table.customer.status === 'waitingDish');
+    // if (freeChef && waitingDish) {
+    //     // 有空闲厨师和有待做菜单，开始服务顾客
+    //     freeChef.startService();
+    // }
 }
 
 /* 游戏事件 */
@@ -364,13 +391,13 @@ function startGameLoop() {
          * 游戏主循环
          * 1. 更新游戏时间
          * 2. 检查顾客到达
-         * 3. 检查等待顾客
+         * 3. 检查空闲厨师
          * 4. 检查厨师进度
          * 5. 检查桌位状态
          */
         updateGameTime();
         checkCustomerArrival();
-        // checkWaitingCustomers();
+        checkFreeChef();
         // checkChefProgress();
         // checkTableStatus();
     }, 1000);

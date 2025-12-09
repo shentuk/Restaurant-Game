@@ -31,8 +31,13 @@ class Customer {
         this.status = 'waitingSeat';
         this.dom.dataset.status = this.status;
         // 顾客等位条
-        this.waitingSeatBar = new ProgressBar('等位中', Game.customers.waitingTime, Game.progressBar.waitingSeatColor[0], Game.progressBar.waitingSeatColor[1]);
-        this.dom.appendChild(this.waitingSeatBar.dom);
+        const waitingSeatBar = new ProgressBar(this, {
+            text: '等位中',
+            time: Game.customers.waitingTime,
+            startColor: Game.progressBar.waitingSeatColor[0],
+            endColor: Game.progressBar.waitingSeatColor[1],
+        });
+        this.dom.appendChild(waitingSeatBar.dom);
         // 插入到等待顾客队列中
         ELEMENTS.waitingCustomerSection.insertBefore(this.dom, ELEMENTS.waitingCustomerSection.firstElementChild);
         Game.customers.waitingCustomers.push(this);
@@ -59,16 +64,25 @@ class Customer {
     paying() {
         this.status = 'paying';
     }
-    // 离开（排队时间太长、放弃点餐、等餐太久顾客生气、顾客用餐完成支付）
+    // 离开餐厅（一天过后排队顾客离开、排队时间太长、放弃点餐、等餐太久顾客生气、顾客用餐完成支付）
     leave() {
-        // 排队时间太长离开
+        // 一天过后排队顾客离开/排队时间太长离开
         if (this.status === 'waitingSeat') {
             // 从等待顾客队列中移除
             Game.customers.waitingCustomers = Game.customers.waitingCustomers.filter(customer => customer.id !== this.id);
             // 顾客离开等待区
             this.dom.remove();
         }
+        // 放弃点餐离开
         if (this.status === 'seatingOrder') {
+            // 顾客离开座位区
+        }
+        // 等餐太久顾客生气离开
+        if (this.status === 'waitingDish') {
+            // 顾客离开座位区
+        }
+        // 顾客用餐完成支付离开
+        if (this.status === 'paying') {
             // 顾客离开座位区
         }
     }

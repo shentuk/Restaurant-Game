@@ -6,7 +6,7 @@ export default {
         week: 1,           // 周数，从第1周开始
         day: 1,            // 天数，从第1天开始
         seconds: 0,        // 秒数
-        daySeconds: 240,   // 每天秒数
+        daySeconds: 48,   // 每天秒数
     },
     // 金钱配置
     money: 500,         // 初始金钱500
@@ -14,34 +14,31 @@ export default {
     dishMenu: {
         menuType: [
             {
-                type: 'liangcai',
                 title: '凉菜（二选一，可不点）',
                 list: [
-                    { name: '凉菜SAN', price: 6, cost: 3, cookingTime: 4, waitingTime: 10, eatingTime: 6 },
-                    { name: '冷切DOM', price: 4, cost: 2, cookingTime: 4, waitingTime: 10, eatingTime: 6 },
+                    { type: 'liangcai', name: '凉菜SAN', price: 6, cost: 2, cookingTime: 6, waitingTime: 15, eatingTime: 6 },
+                    { type: 'liangcai', name: '冷切DOM', price: 4, cost: 1, cookingTime: 6, waitingTime: 15, eatingTime: 6 },
                 ]
             },
             {
-                type: 'zhucai',
                 title: '主菜（五选一，必点）',
                 list: [
-                    { name: 'UL炖LI', price: 12, cost: 5, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-                    { name: '红烧HEAD', price: 15, cost: 6, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-                    { name: '酥炸ECharts', price: 18, cost: 7, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-                    { name: '炙烤CSS', price: 16, cost: 6, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
-                    { name: '清蒸DIV', price: 12, cost: 4, cookingTime: 6, waitingTime: 18, eatingTime: 8 },
+                    { type: 'zhucai', name: 'UL炖LI', price: 12, cost: 3, cookingTime: 10, waitingTime: 25, eatingTime: 8 },
+                    { type: 'zhucai', name: '红烧HEAD', price: 15, cost: 4, cookingTime: 10, waitingTime: 25, eatingTime: 8 },
+                    { type: 'zhucai', name: '酥炸ECharts', price: 18, cost: 5, cookingTime: 10, waitingTime: 25, eatingTime: 8 },
+                    { type: 'zhucai', name: '炙烤CSS', price: 16, cost: 4, cookingTime: 10, waitingTime: 25, eatingTime: 8 },
+                    { type: 'zhucai', name: '清蒸DIV', price: 12, cost: 3, cookingTime: 10, waitingTime: 25, eatingTime: 8 },
                 ]
             },
             {
-                type: 'drink',
                 title: '饮品（二选一，可不点）',
                 list: [
-                    { name: '鲜榨flex', price: 5, cost: 2, cookingTime: 4, waitingTime: 10, eatingTime: 4 },
-                    { name: '小程序奶茶', price: 6, cost: 2, cookingTime: 4, waitingTime: 10, eatingTime: 4 },
+                    { type: 'drink', name: '鲜榨flex', price: 5, cost: 1, cookingTime: 6, waitingTime: 15, eatingTime: 4 },
+                    { type: 'drink', name: '小程序奶茶', price: 6, cost: 2, cookingTime: 6, waitingTime: 15, eatingTime: 4 },
                 ]
             },
         ],
-        curCheckedDishsType: [],       // 当前顾客已选中的菜品类型
+        curCheckedDishs: [],     // 当前顾客已选中的菜品
         curCheckedDishsTotalPrice: 0,     // 当前顾客已选中的菜品总金额
         todo: [],       // 待做菜单
     },
@@ -66,7 +63,7 @@ export default {
         ],
         maxWaitingCustomers: 6, // 最大等待顾客数
         waitingCustomers: [],   // 等待顾客队列
-        waitingTime: 10,        // 顾客等位时间10秒
+        waitingTime: 24,        // 顾客等位时间24秒
         customersVisitedToday: [], // 今天已经来过的顾客
     },
     // 餐桌配置

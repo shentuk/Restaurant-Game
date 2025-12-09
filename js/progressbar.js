@@ -4,11 +4,18 @@
  */
 
 class ProgressBar {
-    constructor(text, time, startColor, endColor) {
-        this.text = text;
-        this.time = time;
-        this.startColor = startColor;
-        this.endColor = endColor;
+    constructor(owner, options) {
+        const {
+            text,
+            time,
+            startColor,
+            endColor
+        } = options;
+        this.owner = owner;  // 所属者
+        this.text = text;    // 显示文本
+        this.time = time;    // 完成时间
+        this.startColor = startColor; // 开始颜色
+        this.endColor = endColor;     // 结束颜色
         this.pos = 0;
         this.init();
     }
@@ -22,12 +29,23 @@ class ProgressBar {
     progressColorGradient() {
         this.dom.style.backgroundImage = `linear-gradient(to right,${this.endColor} ${this.pos}%, ${this.startColor} ${this.pos}%)`;
         // 实现在time时间内this.pos从0到100
-        setTimeout(() => {
-            this.pos++;
-            if (this.pos <= 100) {
+        this.timer = setTimeout(() => {
+            if (this.pos >= 100) {
+                this.pos = 0;
+                clearInterval(this.timer);
+                this.changeOwnerStatus();
+            } else {
+                this.pos++;
                 this.progressColorGradient();
             }
         }, this.time / 100 * 1000);
+    }
+    // 进度条到100%时owner行为变化
+    changeOwnerStatus() {
+        // 顾客放弃等位，直接离开餐厅
+        if (this.owner.status === 'waitingSeat') {
+            this.owner.leave();
+        }
     }
 }
 

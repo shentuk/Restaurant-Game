@@ -3,12 +3,13 @@
  */
 
 import ELEMENTS from './doms.js';
+import Game from './configs.js';
 
 class Table {
     constructor(id) {
         this.id = id; // 餐桌编号
         this.init();
-        this.free();
+        this.free(true);
     }
     // 初始化餐桌
     init() {
@@ -18,12 +19,16 @@ class Table {
         ELEMENTS.tableSection.appendChild(this.dom);
     }
     // 餐桌空闲
-    free() {
+    free(init = false) {
         this.status = 'free';  // 空闲状态
+        this.dom.dataset.status = this.status;
         this.customer = null;  // 顾客实例
         this.food = [];        // 食物
-        this.dom.dataset.status = this.status;
         this.dom.innerHTML = '';
+        // 空桌数增加
+        if (!init) {
+            Game.tables.emptyNum++;
+        }
     }
     // 分配顾客点餐
     assignCustomer(customer) {
@@ -31,7 +36,20 @@ class Table {
         this.customer = customer;
         this.dom.innerHTML = `
             <img src=${this.customer.head} alt="">
+            <div class="checkedDishs"></div>
         `;
+        // 空桌数减少
+        Game.tables.emptyNum--;
+    }
+    // 分配菜单给顾客，顾客等待上菜
+    assignMenu() {
+        for (const dish of this.food) {
+            const checkedDish = document.createElement('div');
+            checkedDish.classList.add('checkedDish');
+            checkedDish.appendChild(dish.dom);
+            this.dom.querySelector('.checkedDishs').appendChild(checkedDish);
+        }
+        this.changeStatus();
     }
     // 顾客状态改变时，改变餐桌样式状态
     changeStatus() {

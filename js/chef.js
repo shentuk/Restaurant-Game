@@ -8,6 +8,7 @@ class Chef {
         this.status = 'free'; // 状态，默认空闲
         this.daysWorked = 0; // 工作天数
         this.firingSalary = 0; // 解雇工资
+        this.coookingDish = null; // 正在做菜的菜品
         this.init();
         this.bindEvent();
     }
@@ -17,7 +18,7 @@ class Chef {
         this.dom.dataset.status = this.status;
         this.dom.innerHTML = `
             <img src="./images/chef.png" alt="">
-            <div id="fireChefBtn" class="fireChefBtn">+</div>
+            <div class="fireChefBtn">+</div>
         `;
 
         // 插入到招聘按钮之前
@@ -25,7 +26,7 @@ class Chef {
     }
     bindEvent() {
         // 点击解雇按钮
-        this.dom.querySelector('#fireChefBtn').addEventListener('click', () => {
+        this.dom.querySelector('.fireChefBtn').addEventListener('click', () => {
             ELEMENTS.operationModal.classList.toggle('active');
             ELEMENTS.fireChefModal.classList.toggle('show');
             this.firing();
