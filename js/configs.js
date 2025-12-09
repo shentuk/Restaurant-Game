@@ -7,6 +7,7 @@ export default {
         day: 1,            // 天数，从第1天开始
         seconds: 0,        // 秒数
         daySeconds: 48,   // 每天秒数
+        start: true,       // 游戏是否开始
     },
     // 金钱配置
     money: 500,         // 初始金钱500
