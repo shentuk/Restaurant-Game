@@ -8,9 +8,8 @@ class Chef {
         this.status = 'free'; // 状态，默认空闲
         this.daysWorked = 0; // 工作天数
         this.firingSalary = 0; // 解雇工资
-        this.coookingDish = null; // 正在做菜的菜品
+        this.food = null; // 正在做菜的菜品
         this.init();
-        this.bindEvent();
     }
     init() {
         this.dom = document.createElement('div');
@@ -19,10 +18,12 @@ class Chef {
         this.dom.innerHTML = `
             <img src="./images/chef.png" alt="">
             <div class="fireChefBtn">+</div>
+            <img src="./images/Food-Dome.png" alt="" class="chefCookDoneIcon">
         `;
-
         // 插入到招聘按钮之前
         ELEMENTS.chefSection.insertBefore(this.dom, ELEMENTS.hireChefBtn);
+
+        this.bindEvent();
     }
     bindEvent() {
         // 点击解雇按钮
@@ -36,6 +37,7 @@ class Chef {
     free() {
         this.status = 'free';
         this.dom.dataset.status = this.status;
+        this.food = null;
     }
     // 解雇
     firing() {
@@ -48,13 +50,18 @@ class Chef {
     cooking(dish) {
         this.status = 'cooking';
         this.dom.dataset.status = this.status;
-        this.coookingDish = dish;
-        // this.dom.appendChild(dish.chef_dish.dom);
+        // 分配菜单
+        dish.assignOwner(this);
+        this.food = dish;
+        // 进度条开始做菜
+        dish.cookingDishProgressBar();
+        this.dom.appendChild(dish.chef_dish.dom);
     }
     // 做完等待上菜
     finishCooking() {
         this.status = 'finishCooking';
         this.dom.dataset.status = this.status;
+        this.dom.querySelector('.chefCookDoneIcon').classList.add('show');
     }
 }
 export default Chef;

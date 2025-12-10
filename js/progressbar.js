@@ -27,6 +27,19 @@ class ProgressBar {
         this.dom.textContent = this.text;
         this.progressColorGradient();
     }
+    // 更新进度条
+    update(options) {
+        const {
+            time,
+            startColor,
+            endColor
+        } = options;
+        this.time = time;
+        this.startColor = startColor;
+        this.endColor = endColor;
+        this.pos = 0;
+        // this.progressColorGradient();
+    }
     // 进度条颜色渐变
     progressColorGradient() {
         this.dom.style.backgroundImage = `linear-gradient(to right,${this.endColor} ${this.pos}%, ${this.startColor} ${this.pos}%)`;
@@ -43,17 +56,35 @@ class ProgressBar {
 
         }, this.time / 100 * 1000);
     }
-    // 进度条没有中断到100%时owner行为变化
+    // 进度条没有中断直到100%时owner行为变化
     changeOwnerStatus() {
         // 顾客放弃等位，直接离开餐厅
         if (this.owner.status === 'waitingSeat') {
+            // 顾客离开餐厅
             this.owner.leave();
         }
         // 厨师做完菜
-
-        // 该菜等待超时
-        //
+        if (this === this.owner.chef_dish) {
+            // 菜做完
+            this.owner.finishCooking();
+            this.dom.style.backgroundImage = '';
+            this.dom.style.backgroundColor = Game.progressBar.finishCookingColor;
+        }
+        // 顾客该菜等待超时
+        if (this === this.owner.table_dish && this.owner.status === 'waiting') {
+            this.owner.waitingTimeout();
+            this.dom.style.backgroundImage = '';
+            this.dom.style.backgroundColor = Game.progressBar.timeoutColor;
+            this.dom.style.textDecoration = 'line-through';
+        }
+        // 顾客用餐结束支付
+        if (this === this.owner.table_dish && this.owner.status === 'eating') {
+            this.owner.paying();
+            this.dom.style.backgroundImage = '';
+            this.dom.style.backgroundColor = Game.progressBar.payingColor;
+        }
     }
+
 }
 
 export default ProgressBar;

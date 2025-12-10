@@ -24,8 +24,13 @@ class Dish {
         this.waitingTime = waitingTime;
         this.eatingTime = eatingTime;
     }
-    // 顾客正在等待的菜单
-    waitingDishs() {
+    // 分配所属
+    assignOwner(owner) {
+        this.owner = owner;
+    }
+    // 顾客正在等待的菜单进度条
+    waitingDishsProgressBar() {
+        this.status = 'waiting';
         this.table_dish = new ProgressBar(this, {
             text: this.name,
             time: this.waitingTime,
@@ -33,14 +38,51 @@ class Dish {
             endColor: Game.progressBar.waitingDishColor[1],
         });
     }
-    // 厨师正在做的菜
-    cookingDishs() {
+    // 厨师正在做的菜进度条
+    cookingDishProgressBar() {
+        this.status = 'cooking';
         this.chef_dish = new ProgressBar(this, {
             text: this.name,
             time: this.cookingTime,
             startColor: Game.progressBar.cookingColor[0],
             endColor: Game.progressBar.cookingColor[1],
         })
+    }
+    // 厨师做完等待上菜
+    finishCooking() {
+        this.status = 'finish';
+        this.owner.finishCooking();
+    }
+    // 顾客正在吃的菜单进度条
+    eatingDishsProgressBar() {
+        this.status = 'eating';
+        const options = {
+            time: this.eatingTime,
+            startColor: Game.progressBar.eatingDishColor[0],
+            endColor: Game.progressBar.eatingDishColor[1],
+        };
+        this.table_dish.update(options);
+    }
+    // 顾客用餐结束支付
+    paying() {
+        this.status = 'paying';
+
+        // 如果其他菜已经为确定状态则顾客可以支付，否则等待其他菜的变化
+        // const table = this.owner;
+        // if (table.food.every(dish => dish.status !== 'waiting' && dish.status !== 'eating')) {
+        //     table.customer.paying();
+        //     table.changeStatus();
+        // }
+    }
+    // 顾客等待超时
+    waitingTimeout() {
+        this.status = 'timeout';
+        // 如果所有菜都超时则顾客生气
+        const table = this.owner;
+        if (table.food.every(dish => dish.status === 'timeout')) {
+            table.customer.angry();
+            table.changeStatus();
+        }
     }
 }
 

@@ -19,8 +19,6 @@ import Customer from './customer.js';
 import Table from './table.js';
 // 菜品类
 import Dish from './dish.js';
-// 进度条类
-import ProgressBar from './progressbar.js';
 
 /* 更新显示 */
 // 更新时间显示
@@ -231,9 +229,8 @@ function sureOrder() {
         if (table.customer && table.customer.status === 'seatingOrder') {
             // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
             Game.dishMenu.curCheckedDishs.forEach(dish => {
-                const dishInstance = new Dish(dish);
-                table.food.push(dishInstance);
-                Game.dishMenu.todo.push(dishInstance);
+                table.food.push(new Dish(dish));
+                Game.dishMenu.todo.push(new Dish(dish));
             });
             // 点好菜等待上菜
             table.customer.waitingDish();
@@ -272,8 +269,8 @@ function resetDailyCustomers() {
     Game.customers.customersVisitedToday = [];
 }
 
-// 顾客到达餐厅
-function customerArrival() {
+// 检查顾客到达餐厅
+function checkCustomerArrival() {
     // 随机生成顾客，每天最多来一次
     if (Math.random() < 0.1) {
         const customerInfo = Game.customers.list[Math.floor(Math.random() * Game.customers.list.length)];
@@ -331,6 +328,42 @@ function checkFreeChef() {
         // 有空闲厨师和有待做菜单，开始做菜
         const todoDish = Game.dishMenu.todo.shift();
         freeChef.cooking(todoDish);
+    }
+}
+
+// 检查厨师进度
+// tag：其实写成全局函数更好，表示是角色的行为
+// 循环检测更好，因为每个厨师做完菜都要检查是否有顾客定了该菜且没有超时还在等待，后来的入座的顾客也可以上这个菜
+// 当然，可以直接在厨师做好菜行为里检测，只检测一次，服务当时在桌位上的顾客，不过这个更合理，有个先来后到的问题
+function checkChefProgress() {
+    for (const chef of Game.chefs.list) {
+        // 检查是否有厨师完成的菜品
+        if (chef.status !== 'finishCooking') {
+            continue;
+        }
+        // 检查是否有顾客定了该菜且没有超时还在等待
+        for (const table of Game.tables.list) {
+            if (table.food.length > 0) {
+                for (const dish of table.food) {
+                    if (dish.status === 'waiting' && dish.name === chef.food.name) {
+                        // 显示上菜按钮
+                        table.dom.querySelector('.serveDishIcon').classList.add('show');
+                    }
+                }
+            }
+        }
+
+        // 如果没有一个菜在等待，厨师直接丢弃
+    }
+}
+
+// 检查桌位状态
+function checkTableStatus() {
+    for (const table of Game.tables.list) {
+        if (table.status === 'paying') {
+            table.customer.paying();
+            table.changeStatus();
+        }
     }
 }
 
@@ -397,10 +430,10 @@ function startGameLoop() {
          * 5. 检查桌位状态
          */
         updateGameTime();
-        customerArrival();
+        checkCustomerArrival();
         checkFreeChef();
-        // checkChefProgress();
-        // checkTableStatus();
+        checkChefProgress();
+        checkTableStatus();
     }, 1000);
 }
 

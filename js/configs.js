@@ -74,12 +74,12 @@ export default {
     },
     // 进度条配置
     progressBar: {
-        waitingSeatColor: ['#4299e1', '#2166c0'], // 顾客等位条颜色
-        waitingDishColor: ['#e22f29', '#8f0707'], // 顾客等菜条颜色
-        eatingDishColor: ['#e67d54', '#cc5405'], // 顾客用餐条颜色
-        payingColor: '#0d9c0d', // 顾客支付条颜色
-        angryColor: '#250707ff', // 顾客愤怒条颜色
-        cookingColor: ['#e67d54', '#b44d08'], // 厨师做菜条颜色
-        finishCookingColor: '#947de6', // 厨师做完菜条颜色
+        waitingSeatColor: ['#4299e1', '#2166c0'], // 等位条颜色
+        waitingDishColor: ['#e22f29', '#8f0707'], // 等菜条颜色
+        eatingDishColor: ['#e67d54', '#cc5405'], // 用餐条颜色
+        payingColor: '#0d9c0d', // 支付条颜色
+        timeoutColor: '#282626ff', // 超时条颜色
+        cookingColor: ['#e67d54', '#b44d08'], // 做菜条颜色
+        finishCookingColor: '#947de6', // 做完菜条颜色
     }
 }

@@ -79,6 +79,11 @@
     bottom: -3px;
     width: 53px;
     height: 53px;
+    display: none;
+}
+
+.chef .chefCookDoneIcon.show {
+    display: block;
 }
 
 /* 解雇厨师按钮 */
@@ -172,6 +177,11 @@
     border: 2px solid #fff;
     background-color: #8f0707;
     border-radius: 50%;
+    /* display: none; */
+}
+
+.serveDishIcon.show {
+    display: block;
 }
 
 .serveDishIcon img {
@@ -191,6 +201,12 @@
     left: -16px;
     width: 50px;
     height: 50px;
+    display: none;
+}
+
+.payIcon.show,
+.appeaseIcon.show {
+    display: block;
 }
 
 /* 用餐区域 */
