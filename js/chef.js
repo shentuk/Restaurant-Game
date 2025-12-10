@@ -33,6 +33,10 @@ class Chef {
         });
     }
     // 空闲
+    free() {
+        this.status = 'free';
+        this.dom.dataset.status = this.status;
+    }
     // 解雇
     firing() {
         this.status = 'firing';
@@ -41,6 +45,16 @@ class Chef {
         ELEMENTS.fireChefCost.textContent = `￥ ${this.firingSalary}`;
     }
     // 正在做菜
+    cooking(dish) {
+        this.status = 'cooking';
+        this.dom.dataset.status = this.status;
+        this.coookingDish = dish;
+        // this.dom.appendChild(dish.chef_dish.dom);
+    }
     // 做完等待上菜
+    finishCooking() {
+        this.status = 'finishCooking';
+        this.dom.dataset.status = this.status;
+    }
 }
 export default Chef;

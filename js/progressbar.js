@@ -49,6 +49,10 @@ class ProgressBar {
         if (this.owner.status === 'waitingSeat') {
             this.owner.leave();
         }
+        // 厨师做完菜
+
+        // 该菜等待超时
+        //
     }
 }
 

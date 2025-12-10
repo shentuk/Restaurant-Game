@@ -17,6 +17,8 @@ import Chef from './chef.js';
 import Customer from './customer.js';
 // 餐桌类
 import Table from './table.js';
+// 菜品类
+import Dish from './dish.js';
 // 进度条类
 import ProgressBar from './progressbar.js';
 
@@ -224,58 +226,49 @@ function cancelFireChef() {
 
 // 确认点餐菜单
 function sureOrder() {
-    // for (const table of Game.tables.list) {
-    //     // 需要把菜给桌子上的点菜状态的顾客
-    //     if (table.customer.status === 'seatingOrder') {
-    //         // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
-    //         Game.dishMenu.curCheckedDishs.forEach(dish => {
-    //             const dishInstance = new ProgressBar(table, {
-    //                 text: dish.name,
-    //                 time: dish.waitingTime,
-    //                 startColor: Game.progressBar.waitingDishColor[0],
-    //                 endColor: Game.progressBar.waitingDishColor[1],
-    //             });
-    //             table.food.push(dishInstance);
-    //             Game.dishMenu.todo.push(dishInstance);
-    //         });
-    //         // 点好菜等待上菜
-    //         table.customer.waitingDish();
-    //         // 分配菜单
-    //         table.assignMenu();
-    //         break;
-    //     }
-    // }
-    // clearCheckedDishs();
-    // updateOrderMenuModal();
-}
-
-// 取消点餐菜单--！！！始终有问题，第二天如果
-function cancelOrder() {
-    // // 顾客从座位区离开
-    // for (const table of Game.tables.list) {
-    //     if (table.status === 'occupied' && table.customer.status === 'seatingOrder') {
-    //         table.free();
-    //         break;
-    //     }
-    // }
-    // clearCheckedDishs();
-    // updateOrderMenuModal();
-}
-
-// 初始化顾客
-function initCustomers() {
-    for (let i = 0; i < Game.customers.list.length; i++) {
-        const customer = new Customer(Game.customers.list[i].id, Game.customers.list[i].name, Game.customers.list[i].head);
-        Game.customers.list[i] = customer;
+    for (const table of Game.tables.list) {
+        // 需要把菜给桌子上的点菜状态的顾客
+        if (table.customer && table.customer.status === 'seatingOrder') {
+            // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
+            Game.dishMenu.curCheckedDishs.forEach(dish => {
+                const dishInstance = new Dish(dish);
+                table.food.push(dishInstance);
+                Game.dishMenu.todo.push(dishInstance);
+            });
+            // 点好菜等待上菜
+            table.customer.waitingDish();
+            // 分配菜单
+            table.assignMenu();
+            break;
+        }
     }
+    clearCheckedDishs();
+    updateOrderMenuModal();
+}
+
+// 取消点餐菜单
+function cancelOrder() {
+    // 顾客从座位区离开
+    for (const table of Game.tables.list) {
+        if (table.customer && table.customer.status === 'seatingOrder') {
+            table.customer.leave();
+            table.free();
+            break;
+        }
+    }
+    clearCheckedDishs();
+    updateOrderMenuModal();
 }
 
 // 重置每日顾客
 function resetDailyCustomers() {
-    // 只重置等待区顾客，还在座位的顾客不重置，可能会造成进入等待区的顾客和座位区的顾客重复
+    // 还在桌位上的顾客不重置，可能会使得第二天排队顾客和桌位上顾客重复，但实际上可以看作是不同的顾客
+    // 等待区顾客离开
     Game.customers.waitingCustomers.forEach(customer => {
         customer.leave();
     });
+    // 生气顾客或者吃完等待支付顾客离开
+
     Game.customers.customersVisitedToday = [];
 }
 
@@ -283,7 +276,8 @@ function resetDailyCustomers() {
 function customerArrival() {
     // 随机生成顾客，每天最多来一次
     if (Math.random() < 0.1) {
-        const customer = Game.customers.list[Math.floor(Math.random() * Game.customers.list.length)];
+        const customerInfo = Game.customers.list[Math.floor(Math.random() * Game.customers.list.length)];
+        const customer = new Customer(customerInfo.id, customerInfo.name, customerInfo.head);
 
         // 检查顾客是否来过
         if (Game.customers.customersVisitedToday.includes(customer.id)) {
@@ -315,7 +309,7 @@ function serveWaitingCustomers() {
     }
     for (const table of Game.tables.list) {
         // 找到一个空桌位，为顾客服务
-        if (table.status === 'free') {
+        if (!table.customer) {
             // 为顾客服务, 从等待队列中招待第一位顾客, 并移除队列
             const customer = Game.customers.waitingCustomers.shift();
             // 为顾客分配桌位
@@ -326,20 +320,18 @@ function serveWaitingCustomers() {
             break; // 找到空闲餐桌后立即跳出循环
         }
     }
-    console.log(Game.tables.list);
 
 }
 
 // 检查空闲厨师
 function checkFreeChef() {
-    // // 检查是否有空闲厨师
-    // const freeChef = Game.chefs.list.find(chef => chef.status === 'free');
-    // // 检查是否有待做菜单
-    // const waitingDish = Game.tables.list.some(table => table.status === 'occupied' && table.customer.status === 'waitingDish');
-    // if (freeChef && waitingDish) {
-    //     // 有空闲厨师和有待做菜单，开始服务顾客
-    //     freeChef.startService();
-    // }
+    // 检查是否有空闲厨师
+    const freeChef = Game.chefs.list.find(chef => chef.status === 'free');
+    if (freeChef && Game.dishMenu.todo.length > 0) {
+        // 有空闲厨师和有待做菜单，开始做菜
+        const todoDish = Game.dishMenu.todo.shift();
+        freeChef.cooking(todoDish);
+    }
 }
 
 /* 游戏事件 */
@@ -369,14 +361,12 @@ function initGame() {
      * 2. 渲染点菜菜单
      * 3. 渲染厨师（默认一个）
      * 4. 渲染餐桌（默认四个）
-     * 5. 初始化顾客（所有顾客实例）
-     * 6. 绑定事件（全局）
+     * 5. 绑定事件（全局）
      */
     updateGameStartModal();
     renderDishMenu();
     renderChef();
     renderTable();
-    initCustomers();
     bindEvents();
 }
 

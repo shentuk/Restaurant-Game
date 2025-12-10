@@ -2,6 +2,9 @@
  * 菜品类
  * 功能：用于表示菜品
  */
+import Game from './configs.js'
+import ProgressBar from "./progressbar.js";
+
 class Dish {
     constructor(options) {
         const {
@@ -20,11 +23,25 @@ class Dish {
         this.cookingTime = cookingTime;
         this.waitingTime = waitingTime;
         this.eatingTime = eatingTime;
-        this.init();
     }
-    // 初始化菜单
-    init() {
-        // 一个菜品实例，会有两个进度条dom，一个是厨师所有进度条，一个是顾客所有进度条
+    // 顾客正在等待的菜单
+    waitingDishs() {
+        this.table_dish = new ProgressBar(this, {
+            text: this.name,
+            time: this.waitingTime,
+            startColor: Game.progressBar.waitingDishColor[0],
+            endColor: Game.progressBar.waitingDishColor[1],
+        });
+    }
+    // 厨师正在做的菜
+    cookingDishs() {
+        this.chef_dish = new ProgressBar(this, {
+            text: this.name,
+            time: this.cookingTime,
+            startColor: Game.progressBar.cookingColor[0],
+            endColor: Game.progressBar.cookingColor[1],
+        })
     }
 }
 
+export default Dish;

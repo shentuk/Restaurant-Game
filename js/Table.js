@@ -20,8 +20,7 @@ class Table {
     }
     // 餐桌空闲
     free(init = false) {
-        this.status = 'free';  // 空闲状态
-        this.dom.dataset.status = this.status;
+        this.dom.dataset.status = 'free';
         this.customer = null;  // 顾客实例
         this.food = [];        // 食物
         this.dom.innerHTML = '';
@@ -32,7 +31,6 @@ class Table {
     }
     // 分配顾客点餐
     assignCustomer(customer) {
-        this.status = 'occupied'; // 占用状态
         this.customer = customer; // 顾客实例
         this.dom.innerHTML = `
             <img src=${this.customer.head} alt="">
@@ -46,7 +44,7 @@ class Table {
         for (const dish of this.food) {
             const checkedDish = document.createElement('div');
             checkedDish.classList.add('checkedDish');
-            checkedDish.appendChild(dish.dom);
+            // checkedDish.appendChild(dish.table_dish.dom);
             this.dom.querySelector('.checkedDishs').appendChild(checkedDish);
         }
         this.changeStatus();
