@@ -3,7 +3,7 @@
  * 功能：用于显示菜品状态条和顾客等位条
  */
 
-import Game from './configs.js'
+import Game from './configs.js';
 
 class ProgressBar {
     constructor(owner, options) {
@@ -38,7 +38,6 @@ class ProgressBar {
         this.startColor = startColor;
         this.endColor = endColor;
         this.pos = 0;
-        // this.progressColorGradient();
     }
     // 进度条颜色渐变
     progressColorGradient() {

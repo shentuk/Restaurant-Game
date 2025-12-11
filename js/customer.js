@@ -56,13 +56,13 @@ class Customer {
     eatingDish() {
         this.status = 'eatingDish';
     }
-    // 生气
-    angry() {
-        this.status = 'angry';
-    }
     // 支付
     paying() {
         this.status = 'paying';
+    }
+    // 生气
+    angry() {
+        this.status = 'angry';
     }
     // 离开（一天过后排队顾客离开、排队时间太长、放弃点餐、等餐太久顾客生气、顾客用餐完成支付）
     leave() {

@@ -1,6 +1,6 @@
 /*
  * 菜品类
- * 功能：用于表示菜品
+ * 功能：用于表示菜品，通过进度条来体现
  */
 import Game from './configs.js'
 import ProgressBar from "./progressbar.js";
@@ -28,16 +28,6 @@ class Dish {
     assignOwner(owner) {
         this.owner = owner;
     }
-    // 顾客正在等待的菜单进度条
-    waitingDishsProgressBar() {
-        this.status = 'waiting';
-        this.table_dish = new ProgressBar(this, {
-            text: this.name,
-            time: this.waitingTime,
-            startColor: Game.progressBar.waitingDishColor[0],
-            endColor: Game.progressBar.waitingDishColor[1],
-        });
-    }
     // 厨师正在做的菜进度条
     cookingDishProgressBar() {
         this.status = 'cooking';
@@ -52,6 +42,16 @@ class Dish {
     finishCooking() {
         this.status = 'finish';
         this.owner.finishCooking();
+    }
+    // 顾客正在等待的菜单进度条
+    waitingDishsProgressBar() {
+        this.status = 'waiting';
+        this.table_dish = new ProgressBar(this, {
+            text: this.name,
+            time: this.waitingTime,
+            startColor: Game.progressBar.waitingDishColor[0],
+            endColor: Game.progressBar.waitingDishColor[1],
+        });
     }
     // 顾客正在吃的菜单进度条
     eatingDishsProgressBar() {

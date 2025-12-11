@@ -20,7 +20,9 @@ import Table from './table.js';
 // 菜品类
 import Dish from './dish.js';
 
-/* 更新显示 */
+/*
+ * 更新显示
+ */
 // 更新时间显示
 function updateTimeDisplay() {
     ELEMENTS.timeWeek.textContent = `W${Game.time.week}`;
@@ -62,7 +64,7 @@ function updateFireChefModal() {
 }
 
 // 更新点餐菜单操作台显示
-function updateOrderMenuModal(customer = '') {
+function updateOrderMenuModal(customer = null) {
     if (customer) {
         ELEMENTS.orderCustomerHead.innerHTML = `<img src=${customer.head} alt="">`;
         ELEMENTS.orderCustomerName.textContent = customer.name;
@@ -100,7 +102,11 @@ function updateHireChefBtnDisplay() {
         ELEMENTS.hireChefBtn.classList.remove('hide');
     }
 }
+/* 更新显示 */
 
+/*
+ * 渲染事件
+ */
 // 渲染菜单
 function renderDishMenu() {
     Game.dishMenu.menuType.forEach(typeItem => {
@@ -149,10 +155,11 @@ function renderTable() {
         Game.tables.list.push(table);
     }
 }
+/* 渲染事件 */
 
-/* 更新显示 */
-
-/* 工具函数 */
+/*
+ * 工具函数
+ */
 // 切换菜品项选择
 function toggleMenuItem(e, dish) {
     const target = e.target;
@@ -192,7 +199,9 @@ function payChefSalaries() {
 }
 /* 工具函数 */
 
-/* 游戏事件 */
+/*
+ * 游戏事件
+ */
 // 确认雇佣厨师
 function sureHireChef() {
     renderChef();
@@ -331,10 +340,12 @@ function checkFreeChef() {
     }
 }
 
-// 检查厨师进度
-// tag：其实写成全局函数更好，表示是角色的行为
-// 循环检测更好，因为每个厨师做完菜都要检查是否有顾客定了该菜且没有超时还在等待，后来的入座的顾客也可以上这个菜
-// 当然，可以直接在厨师做好菜行为里检测，只检测一次，服务当时在桌位上的顾客，不过这个更合理，有个先来后到的问题
+/*
+ * 检查厨师进度
+ * tag：其实写成全局函数更好，表示是角色的行为
+ * 循环检测更好，因为每个厨师做完菜都要检查是否有顾客定了该菜且没有超时还在等待，后来的入座的顾客也可以上这个菜
+ * 当然，可以直接在厨师做好菜行为里检测，只检测一次，服务当时在桌位上的顾客，不过这个更合理，有个先来后到的问题
+ */
 function checkChefProgress() {
     for (const chef of Game.chefs.list) {
         // 检查是否有厨师完成的菜品
@@ -366,10 +377,11 @@ function checkTableStatus() {
         }
     }
 }
-
 /* 游戏事件 */
 
-/* 全局事件 */
+/*
+ * 全局事件
+ */
 // 绑定事件
 function bindEvents() {
     ELEMENTS.startGameBtn.addEventListener('click', startGame);
