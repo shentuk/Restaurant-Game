@@ -58,7 +58,7 @@ function updateHireChefModal() {
 }
 
 // 更新解雇厨师操作台显示
-function updateFireChefModal() {
+export function updateFireChefModal() {
     updateOperationModalDisplay();
     ELEMENTS.fireChefModal.classList.toggle('show');
 }
@@ -215,19 +215,28 @@ function cancelHireChef() {
 
 // 确认解雇厨师
 function sureFireChef() {
-    // 总金额-解约金
-    // const severancePay = Game.chefs.chefWeeklySalary * Game.chefs. severancePayRate;
-    // updateGameMoney(-severancePay);
-    // 去掉当前厨师
-    // Game.chefs.list.pop();
-    // Game.chefs.curChefsNum--;
-    // dom.remove();
+    Game.chefs.list.forEach(chef => {
+        if (chef.status === 'firing') {
+            // 总金额-解雇工资
+            updateGameMoney(-chef.firingSalary);
+            chef.dom.remove();
+        }
+    });
+    // 从厨师列表中移除
+    Game.chefs.list = Game.chefs.list.filter(chef => chef.status !== 'firing');
+    Game.chefs.curChefsNum--;
+
     updateHireChefBtnDisplay();
     updateFireChefModal();
 }
 
 // 取消解雇厨师
 function cancelFireChef() {
+    Game.chefs.list.forEach(chef => {
+        if (chef.status === 'firing') {
+            chef.free();
+        }
+    });
     updateFireChefModal();
 }
 
@@ -340,13 +349,24 @@ function checkFreeChef() {
     }
 }
 
+// 检测是否可以解雇
+function checkFireChef() {
+    for (const chef of Game.chefs.list) {
+        if (chef.status === 'free' && Game.chefs.curChefsNum > 1) {
+            chef.fireChefBtn.classList.remove('hide');
+        } else {
+            chef.fireChefBtn.classList.add('hide');
+        }
+    }
+}
+
 /*
- * 检查厨师进度
+ * 检查是否可以上菜
  * tag：其实写成全局函数更好，表示是角色的行为
  * 循环检测更好，因为每个厨师做完菜都要检查是否有顾客定了该菜且没有超时还在等待，后来的入座的顾客也可以上这个菜
  * 当然，可以直接在厨师做好菜行为里检测，只检测一次，服务当时在桌位上的顾客，不过这个更合理，有个先来后到的问题
  */
-function checkChefProgress() {
+function checkServeDish() {
     for (const chef of Game.chefs.list) {
         // 检查是否有厨师完成的菜品
         if (chef.status !== 'finishCooking') {
@@ -438,13 +458,15 @@ function startGameLoop() {
          * 1. 更新游戏时间
          * 2. 顾客到达餐厅
          * 3. 检查空闲厨师
-         * 4. 检查厨师进度
-         * 5. 检查桌位状态
+         * 4. 检查是否可以解雇
+         * 5. 检查是否可以上菜
+         * 6. 检查桌位状态
          */
         updateGameTime();
         checkCustomerArrival();
         checkFreeChef();
-        checkChefProgress();
+        checkFireChef();
+        checkServeDish();
         checkTableStatus();
     }, 1000);
 }

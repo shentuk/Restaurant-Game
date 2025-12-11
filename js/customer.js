@@ -77,7 +77,7 @@ class Customer {
         if (this.status === 'seatingOrder') {
             // 顾客离开座位区
         }
-        // 等餐太久顾客生气离开
+        // 等餐太久顾客生气安抚后离开
         if (this.status === 'waitingDish') {
             // 顾客离开座位区
         }

@@ -31,7 +31,7 @@ class Dish {
     // 厨师正在做的菜进度条
     cookingDishProgressBar() {
         this.status = 'cooking';
-        this.chef_dish = new ProgressBar(this, {
+        this.chef_dish_progress = new ProgressBar(this, {
             text: this.name,
             time: this.cookingTime,
             startColor: Game.progressBar.cookingColor[0],
@@ -46,7 +46,7 @@ class Dish {
     // 顾客正在等待的菜单进度条
     waitingDishsProgressBar() {
         this.status = 'waiting';
-        this.table_dish = new ProgressBar(this, {
+        this.table_dish_progress = new ProgressBar(this, {
             text: this.name,
             time: this.waitingTime,
             startColor: Game.progressBar.waitingDishColor[0],
@@ -56,12 +56,11 @@ class Dish {
     // 顾客正在吃的菜单进度条
     eatingDishsProgressBar() {
         this.status = 'eating';
-        const options = {
+        this.table_dish_progress.update({
             time: this.eatingTime,
             startColor: Game.progressBar.eatingDishColor[0],
             endColor: Game.progressBar.eatingDishColor[1],
-        };
-        this.table_dish.update(options);
+        });
     }
     // 顾客用餐结束支付
     paying() {

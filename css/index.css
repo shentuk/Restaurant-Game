@@ -177,20 +177,11 @@
     border: 2px solid #fff;
     background-color: #8f0707;
     border-radius: 50%;
-    /* display: none; */
+    display: none;
 }
 
 .serveDishIcon.show {
     display: block;
-}
-
-.serveDishIcon img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 24px;
-    height: 24px;
 }
 
 /* 支付钱币图标/安抚顾客图标 */

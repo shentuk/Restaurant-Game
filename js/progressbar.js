@@ -63,24 +63,24 @@ class ProgressBar {
             this.owner.leave();
         }
         // 厨师做完菜
-        if (this === this.owner.chef_dish) {
+        if (this === this.owner.chef_dish_progress) {
             // 菜做完
             this.owner.finishCooking();
             this.dom.style.backgroundImage = '';
             this.dom.style.backgroundColor = Game.progressBar.finishCookingColor;
         }
+        // 顾客用餐结束支付
+        if (this === this.owner.table_dish_progress && this.owner.status === 'eating') {
+            this.owner.paying();
+            this.dom.style.backgroundImage = '';
+            this.dom.style.backgroundColor = Game.progressBar.payingColor;
+        }
         // 顾客该菜等待超时
-        if (this === this.owner.table_dish && this.owner.status === 'waiting') {
+        if (this === this.owner.table_dish_progress && this.owner.status === 'waiting') {
             this.owner.waitingTimeout();
             this.dom.style.backgroundImage = '';
             this.dom.style.backgroundColor = Game.progressBar.timeoutColor;
             this.dom.style.textDecoration = 'line-through';
-        }
-        // 顾客用餐结束支付
-        if (this === this.owner.table_dish && this.owner.status === 'eating') {
-            this.owner.paying();
-            this.dom.style.backgroundImage = '';
-            this.dom.style.backgroundColor = Game.progressBar.payingColor;
         }
     }
 

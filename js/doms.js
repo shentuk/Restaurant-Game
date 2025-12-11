@@ -18,7 +18,7 @@ export default {
     hireChefBtn: document.getElementById('hireChefBtn'), // 雇佣厨师按钮
     sureHireChefBtn: document.getElementById('sureHireChefBtn'), // 确认雇佣厨师按钮
     cancelHireChefBtn: document.getElementById('cancelHireChefBtn'), // 取消雇佣厨师按钮
-    fireChefCost: document.getElementById('fireChefCost'), // 解决金
+    fireChefCost: document.getElementById('fireChefCost'), // 解约金
     sureFireChefBtn: document.getElementById('sureFireChefBtn'), // 确认解雇厨师按钮
     cancelFireChefBtn: document.getElementById('cancelFireChefBtn'), // 取消解雇厨师按钮
 

@@ -29,24 +29,25 @@ class Table {
     bindEvents() {
         this.payIcon = this.dom.querySelector('.payIcon');
         this.appeaseIcon = this.dom.querySelector('.appeaseIcon');
+
         // 点击支付图标
         this.payIcon.addEventListener('click', () => {
-            // 支付金额
-            Game.money -= this.customer.pay;
-            // 更新金钱显示
-            ELEMENTS.moneyDisplay.textContent = Game.money;
-            // 顾客状态改变
-            this.customer.status = 'payed';
-            // 改变餐桌状态
-            this.changeStatus();
-        });
-        // 点击安抚图标
+            // // 支付金额
+            // Game.money -= this.customer.pay;
+            // // 更新金钱显示
+            // ELEMENTS.moneyDisplay.textContent = Game.money;
+            // // 顾客状态改变
+            // this.customer.status = 'payed';
+            // // 改变餐桌状态
+            // this.changeStatus();
+        }, this);
+        // 点击安抚图标，顾客离开餐厅
         this.appeaseIcon.addEventListener('click', () => {
             // 顾客状态改变
-            this.customer.status = 'appeased';
+            this.customer.leave();
             // 改变餐桌状态
-            this.changeStatus();
-        });
+            this.free();
+        }, this);
     }
     // 餐桌空闲
     free(init = false) {
@@ -55,7 +56,9 @@ class Table {
         this.food = [];        // 食物
         // 空桌数增加
         if (!init) {
-            this.dom.querySelector('.customerHead').remove(); // 清空头像
+            this.customerHead.remove(); // 清空头像
+            this.appeaseIcon.classList.remove('show'); // 清空安抚图标
+            this.payIcon.classList.remove('show');  // 清空支付图标
             this.dom.querySelector('.checkedDishs').innerHTML = ''; // 清空已点菜品
             Game.tables.emptyNum++;
         }
@@ -63,9 +66,11 @@ class Table {
     // 分配桌子
     assignCustomer(customer) {
         this.customer = customer; // 顾客实例
-        this.dom.innerHTML += `
-            <img src=${this.customer.head} alt="" class="customerHead">
-        `;
+        // 顾客上座
+        this.customerHead = document.createElement('img');
+        this.customerHead.classList.add('customerHead');
+        this.customerHead.src = this.customer.head;
+        this.dom.appendChild(this.customerHead);
         // 空桌数减少
         Game.tables.emptyNum--;
     }
@@ -74,11 +79,12 @@ class Table {
         for (const dish of this.food) {
             // 分配菜单
             dish.assignOwner(this);
-            const checkedDish = document.createElement('div');
-            checkedDish.classList.add('checkedDish');
             // 进度条：开始等待上菜
             dish.waitingDishsProgressBar();
-            checkedDish.appendChild(dish.table_dish.dom);
+            // 挂载
+            const checkedDish = document.createElement('div');
+            checkedDish.classList.add('checkedDish');
+            checkedDish.appendChild(dish.table_dish_progress.dom);
 
             // 上菜图标
             const serveDishIcon = document.createElement('img');
@@ -97,11 +103,11 @@ class Table {
     }
     // 上菜用餐
     serveDish(dish) {
-        dish.eatingDishsProgressBar();
+        // dish.eatingDishsProgressBar();
 
-        // 顾客开始用餐
-        this.customer.eatingDish();
-        this.changeStatus();
+        // // 顾客开始用餐
+        // this.customer.eatingDish();
+        // this.changeStatus();
     }
     // 顾客状态改变时，改变餐桌样式状态
     changeStatus() {

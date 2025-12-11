@@ -3,6 +3,7 @@
  */
 import Game from './configs.js';
 import ELEMENTS from './doms.js';
+import { updateFireChefModal } from './index.js';
 class Chef {
     constructor() {
         this.status = 'free'; // 状态，默认空闲
@@ -23,13 +24,14 @@ class Chef {
         // 插入到招聘按钮之前
         ELEMENTS.chefSection.insertBefore(this.dom, ELEMENTS.hireChefBtn);
 
-        this.bindEvent();
+        this.bindEvents();
     }
-    bindEvent() {
-        // 点击解雇按钮
-        this.dom.querySelector('.fireChefBtn').addEventListener('click', () => {
-            ELEMENTS.operationModal.classList.toggle('active');
-            ELEMENTS.fireChefModal.classList.toggle('show');
+    // 绑定事件
+    bindEvents() {
+        this.fireChefBtn = this.dom.querySelector('.fireChefBtn');
+        this.chefCookDoneIcon = this.dom.querySelector('.chefCookDoneIcon');
+        this.fireChefBtn.addEventListener('click', () => {
+            updateFireChefModal();
             this.firing();
         });
     }
@@ -42,6 +44,7 @@ class Chef {
     // 解雇
     firing() {
         this.status = 'firing';
+        // 解约金
         this.firingSalary = Math.ceil(this.daysWorked / 7 * Game.chefs.chefWeeklySalary) + Game.chefs.chefWeeklySalary;
         // 更新解雇工资显示
         ELEMENTS.fireChefCost.textContent = `￥ ${this.firingSalary}`;
@@ -55,7 +58,7 @@ class Chef {
         this.food = dish;
         // 进度条开始做菜
         dish.cookingDishProgressBar();
-        this.dom.appendChild(dish.chef_dish.dom);
+        this.dom.appendChild(dish.chef_dish_progress.dom);
     }
     // 做完等待上菜
     finishCooking() {
