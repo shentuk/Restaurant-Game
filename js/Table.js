@@ -55,7 +55,7 @@ class Table {
             this.appeaseIcon.classList.remove('show'); // 清空安抚图标
             this.payIcon.classList.remove('show');  // 清空支付图标
             this.dom.querySelector('.checkedDishs').innerHTML = ''; // 清空已点菜品
-            // 清空该座顾客的已点菜品
+            // 清空该座顾客的已点菜品,更新所有顾客等待菜单
             Game.dishMenu.customerWaitingDishs = Game.dishMenu.customerWaitingDishs.filter(dish => dish.owner !== this);
             Game.tables.emptyNum++;
         }

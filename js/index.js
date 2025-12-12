@@ -345,14 +345,15 @@ function serveWaitingCustomers() {
 // 检查空闲厨师
 /*
  * 检查是否有空闲厨师和有待做菜单，开始做菜
- * 如果待做菜单中，某个菜所有需要的顾客都超时了，厨师直接不做这个菜
+ * 如果待做菜单中，某个菜所有需要的顾客都超时了，厨师直接不做这个菜，也就是说只做没有超时的菜
  */
 function checkFreeChef() {
     const freeChef = Game.chefs.list.find(chef => chef.status === 'free');
     if (freeChef && Game.dishMenu.chefTodos.length > 0) {
         // 有空闲厨师和有待做菜单，开始做菜
         const todoDish = Game.dishMenu.chefTodos.shift();
-        freeChef.cooking(todoDish);
+        const sameNameDishs = Game.dishMenu.customerWaitingDishs.filter(dish => dish.name === todoDish.name);
+        sameNameDishs.some(dish => dish.status === 'waiting') && freeChef.cooking(todoDish);
         updateGameMoney(-todoDish.cost);
     }
 }

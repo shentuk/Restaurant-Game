@@ -44,7 +44,8 @@ class Dish {
         this.owner.finishCooking();
     }
     // 顾客正在等待的菜单进度条
-    waitingDishsProgressBar() {
+    waitingDishsProgressBar(chef) {
+        // this.owner_chef = chef;
         this.status = 'waiting';
         this.table_dish_progress = new ProgressBar(this, {
             text: this.name,
