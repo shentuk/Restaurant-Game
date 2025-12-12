@@ -53,15 +53,17 @@ class Table {
     free(init = false) {
         this.dom.dataset.status = 'free';
         this.customer = null;  // 顾客实例
-        this.food = [];        // 食物
         // 空桌数增加
         if (!init) {
             this.customerHead.remove(); // 清空头像
             this.appeaseIcon.classList.remove('show'); // 清空安抚图标
             this.payIcon.classList.remove('show');  // 清空支付图标
             this.dom.querySelector('.checkedDishs').innerHTML = ''; // 清空已点菜品
+            // 清空该座顾客的已点菜品
+            // Game.dishMenu.customerWaitingDishs[this.id] = [];
             Game.tables.emptyNum++;
         }
+        this.food = [];        // 食物
     }
     // 分配桌子
     assignCustomer(customer) {

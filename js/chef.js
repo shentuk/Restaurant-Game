@@ -24,22 +24,25 @@ class Chef {
         // 插入到招聘按钮之前
         ELEMENTS.chefSection.insertBefore(this.dom, ELEMENTS.hireChefBtn);
 
+        this.chefCookDoneIcon = this.dom.querySelector('.chefCookDoneIcon');
         this.bindEvents();
     }
     // 绑定事件
     bindEvents() {
         this.fireChefBtn = this.dom.querySelector('.fireChefBtn');
-        this.chefCookDoneIcon = this.dom.querySelector('.chefCookDoneIcon');
         this.fireChefBtn.addEventListener('click', () => {
             updateFireChefModal();
             this.firing();
         });
     }
+    // 初始化或者做完菜后
     // 空闲
     free() {
         this.status = 'free';
         this.dom.dataset.status = this.status;
+        this.food.chef_dish_progress.dom.remove();
         this.food = null;
+        this.chefCookDoneIcon.classList.remove('show');
     }
     // 解雇
     firing() {
@@ -64,7 +67,7 @@ class Chef {
     finishCooking() {
         this.status = 'finishCooking';
         this.dom.dataset.status = this.status;
-        this.dom.querySelector('.chefCookDoneIcon').classList.add('show');
+        this.chefCookDoneIcon.classList.add('show');
     }
 }
 export default Chef;

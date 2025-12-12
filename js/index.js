@@ -234,7 +234,7 @@ function sureFireChef() {
 function cancelFireChef() {
     Game.chefs.list.forEach(chef => {
         if (chef.status === 'firing') {
-            chef.free();
+            chef.status = 'free';
         }
     });
     updateFireChefModal();
@@ -247,8 +247,12 @@ function sureOrder() {
         if (table.customer && table.customer.status === 'seatingOrder') {
             // 生成所有选中的菜品实例，添加到餐桌订单中和待做订单中
             Game.dishMenu.curCheckedDishs.forEach(dish => {
-                table.food.push(new Dish(dish));
-                Game.dishMenu.todo.push(new Dish(dish));
+                // 顾客点的菜品和厨师做的菜品是不同的实例，通过名字来识别是相同菜品
+                const customerDish = new Dish(dish);
+                const chefDish = new Dish(dish);
+                table.food.push(customerDish); // 该桌菜单
+                Game.dishMenu.customerWaitingDishs.push(customerDish); // 所有顾客等待菜单，与桌菜实例一致
+                Game.dishMenu.chefTodos.push(chefDish); // 厨师待做菜单
             });
             // 点好菜等待上菜
             table.customer.waitingDish();
@@ -339,13 +343,17 @@ function serveWaitingCustomers() {
 }
 
 // 检查空闲厨师
+/*
+ * 检查是否有空闲厨师和有待做菜单，开始做菜
+ * 如果待做菜单中，某个菜所有需要的顾客都超时了，厨师直接不做这个菜
+ */
 function checkFreeChef() {
-    // 检查是否有空闲厨师
     const freeChef = Game.chefs.list.find(chef => chef.status === 'free');
-    if (freeChef && Game.dishMenu.todo.length > 0) {
+    if (freeChef && Game.dishMenu.chefTodos.length > 0) {
         // 有空闲厨师和有待做菜单，开始做菜
-        const todoDish = Game.dishMenu.todo.shift();
+        const todoDish = Game.dishMenu.chefTodos.shift();
         freeChef.cooking(todoDish);
+        updateGameMoney(-todoDish.cost);
     }
 }
 
@@ -362,29 +370,35 @@ function checkFireChef() {
 
 /*
  * 检查是否可以上菜
+ * 1. 只要有顾客点了这道菜并且在等待，都可以上菜（显示）
+ * 2. 如果所有顾客点了这道菜都超时了，厨师直接扔掉开始做其他菜或空闲
  * tag：其实写成全局函数更好，表示是角色的行为
  * 循环检测更好，因为每个厨师做完菜都要检查是否有顾客定了该菜且没有超时还在等待，后来的入座的顾客也可以上这个菜
- * 当然，可以直接在厨师做好菜行为里检测，只检测一次，服务当时在桌位上的顾客，不过这个更合理，有个先来后到的问题
+ * 当然，可以直接在厨师做好菜行为里检测，只检测一次，服务当时在桌位上的顾客
  */
 function checkServeDish() {
     for (const chef of Game.chefs.list) {
         // 检查是否有厨师完成的菜品
-        if (chef.status !== 'finishCooking') {
-            continue;
-        }
-        // 检查是否有顾客定了该菜且没有超时还在等待
-        for (const table of Game.tables.list) {
-            if (table.food.length > 0) {
-                for (const dish of table.food) {
-                    if (dish.status === 'waiting' && dish.name === chef.food.name) {
-                        // 显示上菜按钮
-                        table.dom.querySelector('.serveDishIcon').classList.add('show');
-                    }
+        if (chef.status === 'finishCooking') {
+            // 找到同名菜
+            const sameNameDishs = Game.dishMenu.customerWaitingDishs.filter(dish => dish.name === chef.food.name);
+            sameNameDishs.forEach(dish => {
+                const serveDishIcon = dish.table_dish_progress.dom.nextElementSibling;
+                // 检查是否有顾客定了该菜且没有超时还在等待
+                if (dish.status === 'waiting') {
+                    serveDishIcon.classList.add('show');
+                } else {
+                    // 用餐或者超时或者支付，都不显示上菜图标
+                    serveDishIcon.classList.remove('show');
                 }
+            });
+            // 检查所有菜是否都不需要了，或者没有这道菜了，厨师直接丢弃进入下一个状态（空闲或者做其他菜）
+            // every方法空数组也会返回真
+            const allTimeout = sameNameDishs.every(dish => dish.status !== 'waiting');
+            if (allTimeout) {
+                chef.free();
             }
         }
-
-        // 如果没有一个菜在等待，厨师直接丢弃
     }
 }
 
@@ -508,6 +522,12 @@ function updateGameTime() {
     }
 }
 
+/*
+ * 1. +顾客支付
+ * 2. -做菜成本
+ * 3. -厨师周薪
+ * 4. -解约金
+ */
 // 更新游戏金钱
 function updateGameMoney(rev) {
     Game.money += rev;

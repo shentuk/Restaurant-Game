@@ -65,7 +65,7 @@ class ProgressBar {
         // 厨师做完菜
         if (this === this.owner.chef_dish_progress) {
             // 菜做完
-            this.owner.finishCooking();
+            this.owner.finish();
             this.dom.style.backgroundImage = '';
             this.dom.style.backgroundColor = Game.progressBar.finishCookingColor;
         }
@@ -77,7 +77,7 @@ class ProgressBar {
         }
         // 顾客该菜等待超时
         if (this === this.owner.table_dish_progress && this.owner.status === 'waiting') {
-            this.owner.waitingTimeout();
+            this.owner.timeout();
             this.dom.style.backgroundImage = '';
             this.dom.style.backgroundColor = Game.progressBar.timeoutColor;
             this.dom.style.textDecoration = 'line-through';

@@ -39,7 +39,7 @@ class Dish {
         })
     }
     // 厨师做完等待上菜
-    finishCooking() {
+    finish() {
         this.status = 'finish';
         this.owner.finishCooking();
     }
@@ -74,7 +74,7 @@ class Dish {
         // }
     }
     // 顾客等待超时
-    waitingTimeout() {
+    timeout() {
         this.status = 'timeout';
         // 如果所有菜都超时则顾客生气
         const table = this.owner;

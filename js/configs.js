@@ -41,7 +41,8 @@ export default {
         ],
         curCheckedDishs: [],     // 当前顾客已选中的菜品
         curCheckedDishsTotalPrice: 0,     // 当前顾客已选中的菜品总金额
-        todo: [],       // 待做菜单
+        chefTodos: [],       // 厨师待做菜单
+        customerWaitingDishs: [],    // 顾客等待菜单
     },
     // 厨师配置
     chefs: {
