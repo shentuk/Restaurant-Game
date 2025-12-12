@@ -32,14 +32,10 @@ class Table {
 
         // 点击支付图标
         this.payIcon.addEventListener('click', () => {
-            // // 支付金额
-            // Game.money -= this.customer.pay;
-            // // 更新金钱显示
-            // ELEMENTS.moneyDisplay.textContent = Game.money;
-            // // 顾客状态改变
-            // this.customer.status = 'payed';
-            // // 改变餐桌状态
-            // this.changeStatus();
+            // 顾客状态改变
+            this.customer.leave();
+            // 改变餐桌状态
+            this.free();
         }, this);
         // 点击安抚图标，顾客离开餐厅
         this.appeaseIcon.addEventListener('click', () => {
@@ -60,7 +56,7 @@ class Table {
             this.payIcon.classList.remove('show');  // 清空支付图标
             this.dom.querySelector('.checkedDishs').innerHTML = ''; // 清空已点菜品
             // 清空该座顾客的已点菜品
-            // Game.dishMenu.customerWaitingDishs[this.id] = [];
+            Game.dishMenu.customerWaitingDishs = Game.dishMenu.customerWaitingDishs.filter(dish => dish.owner !== this);
             Game.tables.emptyNum++;
         }
         this.food = [];        // 食物
