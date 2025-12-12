@@ -4,7 +4,10 @@
 
 import ELEMENTS from './doms.js';
 import Game from './configs.js';
-import { updateGameMoney } from './index.js';
+import {
+    updateGameMoney,
+    showMessage
+} from './index.js';
 
 class Table {
     constructor(id) {
@@ -40,6 +43,10 @@ class Table {
             updateGameMoney(totalPrice);
             // 顾客状态改变
             this.customer.leave();
+
+            // 支付提示消息
+            showMessage(`<p>${this.customer.name}完成用餐，收获$${totalPrice}元</p>`, 'success');
+
             // 改变餐桌状态
             this.free();
         }, this);
@@ -47,6 +54,10 @@ class Table {
         this.appeaseIcon.addEventListener('click', () => {
             // 顾客状态改变
             this.customer.leave();
+
+            // 顾客离开提示消息
+            showMessage(`<p>${this.customer.name}失望而归，别再让客人挨饿了</p>`, 'fail');
+
             // 改变餐桌状态
             this.free();
         }, this);

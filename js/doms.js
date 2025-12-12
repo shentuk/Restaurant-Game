@@ -31,4 +31,5 @@ export default {
 
     tableSection: document.getElementById('tableSection'), // 用餐区域
 
+    message: document.getElementById('message') // 消息区域
 }

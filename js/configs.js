@@ -82,5 +82,9 @@ export default {
         timeoutColor: '#282626ff', // 超时条颜色
         cookingColor: ['#e67d54', '#b44d08'], // 做菜条颜色
         finishCookingColor: '#947de6', // 做完菜条颜色
+    },
+    // 消息配置
+    message: {
+        durationDefault: 2000
     }
 }

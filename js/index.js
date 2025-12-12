@@ -197,6 +197,17 @@ function payChefSalaries() {
     // 更新游戏金钱
     updateGameMoney(-totalSalary);
 }
+
+// 显示提示消息
+export function showMessage(el, bgcolor) {
+    ELEMENTS.message.innerHTML = el;
+    ELEMENTS.message.classList.add('show', bgcolor);
+
+    const timer = setTimeout(() => {
+        clearTimeout(timer);
+        ELEMENTS.message.classList.remove('show', 'fail', 'success');
+    }, Game.message.durationDefault);
+}
 /* 工具函数 */
 
 /*
@@ -206,6 +217,12 @@ function payChefSalaries() {
 function sureHireChef() {
     renderChef();
     updateHireChefModal();
+
+    // 雇佣厨师提示消息
+    showMessage(
+        `<p>招聘厨师成功！您已经有<span>${Game.chefs.curChefsNum}</span>名厨师</p>`,
+        'success'
+    );
 }
 
 // 取消雇佣厨师
@@ -215,13 +232,20 @@ function cancelHireChef() {
 
 // 确认解雇厨师
 function sureFireChef() {
-    Game.chefs.list.forEach(chef => {
-        if (chef.status === 'firing') {
-            // 总金额-解雇工资
-            updateGameMoney(-chef.firingSalary);
-            chef.dom.remove();
-        }
-    });
+    const firingChef = Game.chefs.list.find(chef => chef.status === 'firing');
+
+    // 钱不够
+    if (firingChef.firingSalary > Game.money) {
+        showMessage(`<p>你的金额已经不足支付解约金</p>`, 'fail');
+        return;
+    }
+
+    // 钱够
+    // 总金额-解雇工资
+    updateGameMoney(-firingChef.firingSalary);
+    firingChef.dom.remove();
+    // 解雇厨师提示消息
+    showMessage(`<p>解约厨师成功，解约支出<span>${firingChef.firingSalary}</span>元</p>`, 'success');
     // 从厨师列表中移除
     Game.chefs.list = Game.chefs.list.filter(chef => chef.status !== 'firing');
     Game.chefs.curChefsNum--;
@@ -258,6 +282,12 @@ function sureOrder() {
             table.customer.waitingDish();
             // 分配菜单
             table.assignMenu();
+
+            // 完成点餐提示信息
+            showMessage(
+                `<p>${table.customer.name}完成点餐，等候用餐<br>疯狂点击厨师头像可以加速做菜</p>`,
+                'success'
+            );
             break;
         }
     }
@@ -404,14 +434,7 @@ function checkServeDish() {
 }
 
 // 检查桌位状态
-function checkTableStatus() {
-    // for (const table of Game.tables.list) {
-    //     if (table.status === 'paying') {
-    //         table.customer.paying();
-    //         table.changeStatus();
-    //     }
-    // }
-}
+// function checkTableStatus() { }
 /* 游戏事件 */
 
 /*
@@ -456,9 +479,14 @@ function startGame() {
      * 开始游戏
      * 1. 隐藏游戏开始弹窗
      * 2. 开启游戏循环
+     * 3. 消息提示：空座位
      */
     updateGameStartModal();
     startGameLoop();
+    showMessage(
+        `<p>餐厅目前有空位，赶紧点击等位客人头像<br>让客人入座点餐吧</p>`,
+        'fail'
+    );
 }
 
 // 游戏循环
@@ -475,14 +503,14 @@ function startGameLoop() {
          * 3. 检查空闲厨师
          * 4. 检查是否可以解雇
          * 5. 检查是否可以上菜
-         * 6. 检查桌位状态
+         * 6. 检查桌位状态？？？
          */
         updateGameTime();
         checkCustomerArrival();
         checkFreeChef();
         checkFireChef();
         checkServeDish();
-        checkTableStatus();
+        // checkTableStatus();
     }, 1000);
 }
 
