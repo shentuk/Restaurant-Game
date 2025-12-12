@@ -67,12 +67,16 @@ class Dish {
     paying() {
         this.status = 'paying';
 
-        // 如果其他菜已经为确定状态则顾客可以支付，否则等待其他菜的变化
-        // const table = this.owner;
-        // if (table.food.every(dish => dish.status !== 'waiting' && dish.status !== 'eating')) {
-        //     table.customer.paying();
-        //     table.changeStatus();
-        // }
+        // 如果其他菜为（静态）支付态或者超时，则支付；（动态）则跟随（先吃后等）
+        const table = this.owner;
+        if (table.food.every(dish => dish.status !== 'waiting' && dish.status !== 'eating')) {
+            table.customer.paying();
+            table.changeStatus();
+        } else if (table.food.every(dish => dish.status !== 'eating')) {
+            // 没有要吃的就等，有吃的先吃（吃的状态不变）
+            table.customer.waitingDish();
+            table.changeStatus();
+        }
     }
     // 顾客等待超时
     timeout() {
@@ -81,6 +85,10 @@ class Dish {
         const table = this.owner;
         if (table.food.every(dish => dish.status === 'timeout')) {
             table.customer.angry();
+            table.changeStatus();
+        } else if (table.food.every(dish => dish.status !== 'waiting' && dish.status !== 'eating')) {
+            // 如果其他菜为（静态）支付态或者超时（不全是），则支付；（动态）则跟随
+            table.customer.paying();
             table.changeStatus();
         }
     }

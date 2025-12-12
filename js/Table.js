@@ -4,6 +4,7 @@
 
 import ELEMENTS from './doms.js';
 import Game from './configs.js';
+import { updateGameMoney } from './index.js';
 
 class Table {
     constructor(id) {
@@ -32,6 +33,11 @@ class Table {
 
         // 点击支付图标
         this.payIcon.addEventListener('click', () => {
+            // 支付所有被吃了的菜的钱
+            const totalPrice = this.food.reduce((acc, dish) => {
+                return dish.status === 'paying' ? acc + dish.price : acc;
+            }, 0);
+            updateGameMoney(totalPrice);
             // 顾客状态改变
             this.customer.leave();
             // 改变餐桌状态
@@ -101,11 +107,25 @@ class Table {
     }
     // 上菜用餐
     serveDish(dish) {
-        // dish.eatingDishsProgressBar();
-
-        // // 顾客开始用餐
-        // this.customer.eatingDish();
-        // this.changeStatus();
+        // 厨师更新
+        for (const chef of Game.chefs.list) {
+            if (chef.status === 'finishCooking' && chef.food.name === dish.name) {
+                chef.free();
+                break;
+            }
+        }
+        // 其他菜品都隐藏上菜按钮
+        const sameNameDishs = Game.dishMenu.customerWaitingDishs.filter(item => item.name === dish.name);
+        sameNameDishs.forEach(dish => {
+            const serveDishIcon = dish.table_dish_progress.dom.nextElementSibling;
+            serveDishIcon.classList.remove('show');
+        });
+        // 进度条变化
+        dish.eatingDishsProgressBar();
+        // 顾客开始吃
+        this.customer.eatingDish();
+        // 餐桌变化
+        this.changeStatus();
     }
     // 顾客状态改变时，改变餐桌样式状态
     changeStatus() {

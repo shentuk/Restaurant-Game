@@ -389,7 +389,7 @@ function checkServeDish() {
                 if (dish.status === 'waiting') {
                     serveDishIcon.classList.add('show');
                 } else {
-                    // 用餐或者超时或者支付，都不显示上菜图标
+                    // 超时或者用餐，这个菜不显示上菜图标
                     serveDishIcon.classList.remove('show');
                 }
             });
@@ -405,12 +405,12 @@ function checkServeDish() {
 
 // 检查桌位状态
 function checkTableStatus() {
-    for (const table of Game.tables.list) {
-        if (table.status === 'paying') {
-            table.customer.paying();
-            table.changeStatus();
-        }
-    }
+    // for (const table of Game.tables.list) {
+    //     if (table.status === 'paying') {
+    //         table.customer.paying();
+    //         table.changeStatus();
+    //     }
+    // }
 }
 /* 游戏事件 */
 
@@ -530,7 +530,7 @@ function updateGameTime() {
  * 4. -解约金
  */
 // 更新游戏金钱
-function updateGameMoney(rev) {
+export function updateGameMoney(rev) {
     Game.money += rev;
     // 更新金钱显示
     updateMoneyDisplay();
