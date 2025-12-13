@@ -1,5 +1,11 @@
 # WebMOOC 餐厅游戏
 
+<p>
+    <a href="https://static-mp-8b563155-c1c8-4738-92c7-9ef61b672afd.next.bspapp.com/" style="text-decoration: underline;" title="点击进入餐厅游戏">
+        在线体验
+    </a>
+</p>
+
 **难度等级** :star::star::star:
 需要具备基础知识
 
