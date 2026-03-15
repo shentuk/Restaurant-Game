@@ -1,0 +1,10 @@
+{
+  "name": "restaurant-game",
+  "private": true,
+  "scripts": {
+    "compress-images": "node scripts/compress-images.js"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5"
+  }
+}
