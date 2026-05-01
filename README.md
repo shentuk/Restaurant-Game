@@ -1,9 +1,9 @@
 # WebMOOC 餐厅游戏
 
-[在线体验](https://static-mp-8b563155-c1c8-4738-92c7-9ef61b672afd.next.bspapp.com/)
+[在线体验](https://env-00jy67b7bqrl-static.normal.cloudstatic.cn/index.html)
 
 > 使用了`Module`模块系统，需要在服务器环境下运行，不能直接在浏览器打开。
-> 下载代码后，可以使用`live server`启动本地服务器，然后在浏览器打开`index.html`文件。
+> 下载代码后，可以使用`live server`插件开启一个本地服务器，然后打开`index.html`文件。
 
 **难度等级** :star::star::star:
 需要具备基础知识
