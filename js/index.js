@@ -58,7 +58,7 @@ function updateHireChefModal() {
 }
 
 // 更新解雇厨师操作台显示
-export function updateFireChefModal() {
+function updateFireChefModal() {
     updateOperationModalDisplay();
     ELEMENTS.fireChefModal.classList.toggle('show');
 }
@@ -199,7 +199,7 @@ function payChefSalaries() {
 }
 
 // 显示提示消息
-export function showMessage(el, bgcolor) {
+function showMessage(el, bgcolor) {
     ELEMENTS.message.innerHTML = el;
     ELEMENTS.message.classList.add('show', bgcolor);
 
@@ -558,7 +558,7 @@ function updateGameTime() {
  * 4. -解约金
  */
 // 更新游戏金钱
-export function updateGameMoney(rev) {
+function updateGameMoney(rev) {
     Game.money += rev;
     // 更新金钱显示
     updateMoneyDisplay();
@@ -567,3 +567,9 @@ export function updateGameMoney(rev) {
 
 // 初始化游戏
 document.addEventListener('DOMContentLoaded', initGame);
+
+export {
+    updateFireChefModal,
+    showMessage,
+    updateGameMoney,
+}
